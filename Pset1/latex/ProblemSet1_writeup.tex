@@ -1,0 +1,207 @@
+\documentclass[12pt]{article}
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+\fancyfoot{}
+\cfoot{\thepage{}~of~\pageref{LastPage}}
+\usepackage{caption}
+\usepackage[pdftex]{graphicx}
+\usepackage{epstopdf}
+\usepackage{mathtools}
+\usepackage{longtable}
+\usepackage{scrextend}
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{amsmath}
+\usepackage{amstext}
+\usepackage{amsthm}
+\usepackage{bbm}
+\usepackage{enumerate}
+\usepackage{subcaption}
+\usepackage{caption}
+\usepackage{amssymb}
+\usepackage{breqn}
+\usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue]{hyperref}
+\usepackage{bigints}
+\usepackage{color}
+%\usepackage{parskip}
+\usepackage[letterpaper]{geometry}
+\usepackage{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{setspace}
+\usepackage{keyval}
+\usepackage{ifthen}
+\usepackage[american]{babel}
+\usepackage{etoolbox}
+\usepackage[all]{nowidow}
+\usepackage[utf8]{inputenc}
+\usepackage{csquotes}
+\usepackage{adjustbox}
+\usepackage{afterpage}
+\usepackage{comment}
+\usepackage{enumitem}
+\usepackage{pythonhighlight}
+\usepackage{url}
+\setlist{  
+  listparindent=\parindent,
+  parsep=0pt,
+}
+
+\usepackage[space]{grffile} %Loading the package
+
+% Common base path for both figures and tables
+\newcommand{\commonpath}{/Users/garyschlauch/Documents/github/ARE-261-Problem-Sets/Pset1/}
+
+% Setting the graphics path
+\graphicspath{{/Users/garyschlauch/Documents/github/ARE-261-Problem-Sets/Pset1/output/figures}} 
+
+% Setting the tables path
+\makeatletter
+\def\input@path{{/Users/garyschlauch/Documents/github/ARE-261-Problem-Sets/Pset1/output/tables}}
+\makeatother
+
+
+
+
+\DeclareRobustCommand{\bbone}{\text{\usefont{U}{bbold}{m}{n}1}}
+
+\DeclareMathOperator{\EX}{\mathbb{E}}% expected value
+
+\usepackage{scalerel,stackengine}
+\stackMath
+\newcommand\reallywidehat[1]{%
+\savestack{\tmpbox}{\stretchto{%
+  \scaleto{%
+    \scalerel*[\widthof{\ensuremath{#1}}]{\kern-.6pt\bigwedge\kern-.6pt}%
+    {\rule[-\textheight/2]{1ex}{\textheight}}%WIDTH-LIMITED BIG WEDGE
+  }{\textheight}% 
+}{0.5ex}}%
+\stackon[1pt]{#1}{\tmpbox}%
+}
+
+\newcommand{\indep}{\perp \!\!\! \perp}
+
+\DeclareMathOperator*{\plim}{plim}
+
+%\renewcommand{\theenumi}{\Alph{enumi}}
+
+\usepackage[backend=biber, uniquename=false, uniquelist=false, url = false, doi=false, isbn=false, authordate, natbib]{biblatex-chicago}
+\addbibresource{mainbib.bib}
+%\renewcommand*{\nameyeardelim}{\addcomma\space}
+
+\usepackage{appendix}
+\renewcommand\appendixpagename{\vspace{-10mm}\centering{\Large Appendix}}
+
+\AtEveryBibitem{%
+ \ifentrytype{online}
+   {}
+    {\clearfield{urlyear}\clearfield{urlmonth}\clearfield{urlday}}}
+
+\AtEveryBibitem{\clearfield{eprinttype}\clearfield{eprint}}
+
+
+\geometry{
+top = 1in,            % <-- you want to adjust this
+inner = 1in,
+outer = 1in,
+bottom = 1in,
+%headheight = 3ex,       % <-- and this
+%headsep = 2ex,          % <-- and this
+}
+\newcommand{\argmax}{\operatornamewithlimits{argmax}}
+\newcommand{\V}{\mathbb{V}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\tr}{\text{tr}}
+\newcommand{\inv}{^{-1}}
+\newcommand{\qedblack}{\hfill $\blacksquare$}
+\newcommand{\Reals}{\mathbb{R}}
+\newcommand{\rv}[1]{\textcolor{red}{#1}}
+\newtheorem{theorem}{Theorem}
+
+\usepackage{booktabs}
+\renewcommand{\thefigure}{\arabic{figure}}
+\renewcommand{\thetable}{\arabic{table}}
+
+\pagenumbering{gobble}
+
+\begin{document}
+
+\begin{center}
+ARE 261 - Reed's Half \\
+Problem Set 1 \\
+Garrison Schlauch
+\end{center}
+
+\section{Temperature and Economic Outcomes}
+
+\subsection{Temperature Aggregation}
+See code
+
+\subsection{US Climate Impacts: County-Year Damages}
+
+\subsubsection*{1.}
+Figure \ref{fig_climate_impacts_1}
+
+\subsubsection*{2.}
+Figure \ref{fig_climate_impacts_2}
+
+\subsubsection*{3.}
+Table \ref{table_climate_impacts_3}
+
+\clearpage
+
+\section{Hedonic Air Quality Analysis}
+
+\subsection{Questions}
+
+\subsubsection*{1.}
+Table \ref{hedonic_1}
+
+\subsubsection*{2.}
+
+\subsubsection*{3.}
+
+\subsubsection*{4.}
+
+\subsubsection*{5.}
+
+\subsubsection*{6.}
+
+\subsubsection*{7.}
+
+\subsubsection*{8.}
+
+\subsubsection*{9.}
+
+\clearpage
+
+\section*{Figures}
+
+\begin{figure}[h!]
+\centering
+\caption{Exercise 1.2.1}
+\includegraphics[width=0.99\textwidth]{Climate_Impacts_Fig1.png}
+\label{fig_climate_impacts_1}
+\end{figure}
+
+
+\begin{figure}[h!]
+\centering
+\caption{Exercise 1.2.1}
+\includegraphics[width=0.99\textwidth]{Climate_Impacts_Fig2.png}
+\label{fig_climate_impacts_2}
+\end{figure}
+
+\clearpage
+
+\section*{Tables}
+
+\input{reg_table_climate_impacts_3.tex}
+
+\clearpage
+
+\input{hedonic_1.tex}
+
+\end{document}
