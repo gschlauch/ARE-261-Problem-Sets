@@ -1,5 +1,5 @@
 
-global dirpath = "\\tsclient\Documents\Materials\ARE261\Reed\pset1"
+global dirpath = "\\tsclient\Documents\github\ARE-261-Problem-Sets\Pset1"
 global dirpath_data = "$dirpath\data"
 
 * 1.2 Climate Impacts -----------------------------------------------
@@ -14,6 +14,7 @@ local temp_bins "tempB0 temp0to4 temp4to8 temp8to12 temp12to16 o.temp16to20 temp
 reghdfe log_emp_farm `temp_bins', absorb(fips year)
 preserve
 regsave, tstat pval ci
+gen depvar =  "`=e(depvar)'"
 export delimited "$dirpath_data\intermediate\reg_climate_impacts_1.csv", replace
 restore
 
@@ -22,6 +23,7 @@ gen log_farm_prop_income_pc = log(inc_farm_prop_income/pop_population)
 reghdfe log_farm_prop_income_pc spline*, absorb(fips year)
 preserve
 regsave, tstat pval ci
+gen depvar =  "`=e(depvar)'"
 export delimited "$dirpath_data\intermediate\reg_climate_impacts_2.csv", replace
 restore
 
@@ -31,6 +33,6 @@ local temp_bins_interacted "`temp_bins' c.tempB0#c.tempA32 c.temp0to4#c.tempA32 
 reghdfe log_emp_farm `temp_bins_interacted', absorb(fips year)
 preserve
 regsave, tstat pval ci
+gen depvar =  "`=e(depvar)'"
 export delimited "$dirpath_data\intermediate\reg_climate_impacts_3.csv", replace
 restore
-

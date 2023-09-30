@@ -1,4 +1,4 @@
-global dirpath = "\\tsclient\Documents\Materials\ARE261\Reed\pset1"
+global dirpath = "\\tsclient\Documents\github\ARE-261-Problem-Sets\Pset1"
 global dirpath_data = "$dirpath\data"
 
 * 1.1 Temperature Aggregation -----------------------------------------------
