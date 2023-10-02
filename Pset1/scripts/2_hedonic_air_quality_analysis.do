@@ -150,21 +150,28 @@
 
 
 * 5
-foreach bwidth of numlist 2 3 4 {
-	
-	lowess dgtsp mtspgm74 if regulation_iv == 1, ///
-		gen(dgtsp1_bwidth`bwidth') bwidth(`bwidth') nograph
-	lowess dgtsp mtspgm74 if regulation_iv == 0, ///
-		gen(dgtsp0_bwidth`bwidth') bwidth(`bwidth') nograph
+local varlist dgtsp dlhouse
+foreach var of local varlist {
+	foreach bwidth of numlist 2 3 4 {
+		
+		local b = `bwidth' / 10
+		
+		lowess `var' mtspgm74 if tsp7576 == 1, ///
+			gen(`var'1) bwidth(`b') nograph
+		lowess `var' mtspgm74 if tsp7576 == 0, ///
+			gen(`var'0) bwidth(`b') nograph
+			
+		assert (missing(`var'1) == (tsp7576 == 0))
+		assert (missing(`var'0) == (tsp7576 == 1))
+		gen `var'_bwidth`bwidth' = `var'1
+		replace `var'_bwidth`bwidth' = `var'0 if tsp7576 == 0
+		drop `var'1 `var'0
 
-	lowess dlhouse mtspgm74 if regulation_iv == 1, ///
-		gen(dlhouse1_bwidth`bwidth') bwidth(`bwidth') nograph
-	lowess dlhouse mtspgm74 if regulation_iv == 0, ///
-		gen(dlhouse0_bwidth`bwidth') bwidth(`bwidth') nograph
+	}
 }
 
 preserve
-keep dgtsp* dlhouse* mtspgm74 regulation_iv
+keep dgtsp* dlhouse* mtspgm74 tsp7576
 export delimited "$dirpath_data\intermediate\lowess_hedonic_5.csv", replace
 restore
 
@@ -172,30 +179,49 @@ restore
 * 6
 reg dlhouse `controls' [aweight = pop7080]
 predict dlhouse_hat, xb
-lowess dlhouse_hat mtspgm74 if regulation_iv == 0, ///
-	gen(index0) bwidth(2) nograph
-lowess dlhouse_hat mtspgm74 if regulation_iv == 1, ///
-	gen(index1) bwidth(2) nograph
+
+foreach bwidth of numlist 2 3 4 {
+	
+	local b = `bwidth' / 10
+	
+	lowess dlhouse_hat mtspgm74 if tsp7576 == 1, ///
+		gen(index1_bwidth`bwidth') bwidth(`b') nograph
+	lowess dlhouse_hat mtspgm74 if tsp7576 == 0, ///
+		gen(index0_bwidth`bwidth') bwidth(`b') nograph
+		
+	assert (missing(index1_bwidth`bwidth') == (tsp7576 == 0))
+	assert (missing(index0_bwidth`bwidth') == (tsp7576 == 1))
+	gen index_bwidth`bwidth' = index1_bwidth`bwidth'
+	replace index_bwidth`bwidth' = index0_bwidth`bwidth' if tsp7576 == 0
+	drop index1_bwidth`bwidth' index0_bwidth`bwidth'
+}
+
 preserve
-keep index* mtspgm74 regulation_iv
+keep index* mtspgm74 tsp7576
 export delimited "$dirpath_data\intermediate\lowess_hedonic_6.csv", replace
 restore
 
+
 * 7
-gen regulation2 = (mtspgm74 < 75 & mtspgm74 >= 50)
+gen mtspgm74_50to75 = (mtspgm74 < 75 & mtspgm74 >= 50)
 local bwidth = 6
+local b = `bwidth' / 10
 
-lowess dgtsp mtspgm74 if regulation2 == 1 & tsp7576==1, ///
-	gen(dgtsp_reg) bwidth(`bwidth') nograph
-lowess dgtsp mtspgm74 if regulation2 == 1 & tsp7576==0, ///
-	gen(dgtsp_noreg) bwidth(`bwidth') nograph
-
-lowess dlhouse mtspgm74 if regulation2 == 1 & tsp7576==1, ///
-	gen(dlhouse_reg) bwidth(`bwidth') nograph
-lowess dlhouse mtspgm74 if regulation2 == 1 & tsp7576==0, ///
-	gen(dlhouse_noreg) bwidth(`bwidth') nograph
+local varlist dgtsp dlhouse
+foreach var of local varlist {
+	
+	lowess `var' mtspgm74 if mtspgm74_50to75 == 1 & tsp7576==1, ///
+		gen(`var'1) bwidth(`b') nograph
+	lowess `var' mtspgm74 if mtspgm74_50to75 == 1 & tsp7576==0, ///
+		gen(`var'0) bwidth(`b') nograph
+		
+	gen `var'_50to75_bwidth`bwidth' = `var'1
+	replace `var'_50to75_bwidth`bwidth' = `var'0 if tsp7576 == 0
+	drop `var'1 `var'0
+	
+}
 
 preserve
-keep dgtsp dlhouse mtspgm74 regulation2 tsp7576 *_reg *_noreg
+keep dgtsp dlhouse mtspgm74 mtspgm74_50to75 tsp7576 *50to75*
 export delimited "$dirpath_data\intermediate\lowess_hedonic_7.csv", replace
 restore

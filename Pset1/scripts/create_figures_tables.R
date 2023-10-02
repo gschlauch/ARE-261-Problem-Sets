@@ -243,7 +243,7 @@ reg_results_df <- read_csv(paste0(dirpath_data, "/intermediate/reg_climate_impac
 make_reg_table(
   reg_results_df,
   ncol = 1,
-  title = "1.2 - Climate Impacts, regression 3",
+  title = "Exercise 1.2.3",
   caption = "",
   label = "table_climate_impacts_3",
   save_file = paste0(dirpath_output, "/tables/reg_table_climate_impacts_3.tex"),
@@ -271,7 +271,7 @@ reg_results_df <- full_join(df1, df2, by = c("var")) %>%
 make_reg_table(
   reg_results_df,
   ncol = 2,
-  title = "Hedonic analysis - Question 1",
+  title = "Exercise 2.1",
   caption = "",
   label = "hedonic_1_1",
   save_file = paste0(dirpath_output, "/tables/hedonic_1_1.tex"),
@@ -305,7 +305,7 @@ reg_results_df <- full_join(df1, df2, by = c("var")) %>%
 make_reg_table(
   reg_results_df,
   ncol = 2,
-  title = "Hedonic analysis - Question 2",
+  title = "Exercise 2.2",
   caption = "",
   label = "hedonic_2",
   save_file = paste0(dirpath_output, "/tables/hedonic_2.tex"),
@@ -330,7 +330,7 @@ reg_results_df <- reg_results_df %>%
 make_reg_table(
   reg_results_df,
   ncol = 6,
-  title = "Hedonic analysis - Question 3",
+  title = "Exercise 2.3",
   caption = "",
   label = "hedonic_3",
   save_file = paste0(dirpath_output, "/tables/hedonic_3.tex"),
@@ -355,7 +355,7 @@ reg_results_df <- reg_results_df %>%
 make_reg_table(
   reg_results_df,
   ncol = 6,
-  title = "Hedonic analysis - Question 4",
+  title = "Exercise 2.4",
   caption = "",
   label = "hedonic_4",
   save_file = paste0(dirpath_output, "/tables/hedonic_4.tex"),
@@ -363,130 +363,143 @@ make_reg_table(
 )
 
 # 5 ----------------------------------------------------------------------------
-df5 <- read_csv(paste0(dirpath_data, "/intermediate/lowess_hedonic_5.csv"))
-df5_0 <- df5[df5$regulation_iv == 0, ]
-df5_1 <- df5[df5$regulation_iv == 1, ]
+df5 <- read_csv(paste0(dirpath_data, "/intermediate/lowess_hedonic_5.csv")) %>%
+  mutate(tsp7576 = as.character(tsp7576))
 
 varlist <- c("dlhouse", "dgtsp")
+bwidths <- as.character(2:4)
+
 for (var in varlist) {
   if (var == "dlhouse") {
     yaxis_title <- "Change in log housing values"
   } else{
     yaxis_title <- "Change in annual mean TSPs"
   }
-  for (i in 2:2) {
-    i_str <- as.character(i)
+  for (bwidth in bwidths) {
     plt <- ggplot() +
       geom_point(
         data = df5,
-        aes(x = mtspgm74, y = .data[[paste0(var, "0_bwidth", i_str)]], color = regulation_iv),
-        color = "blue",
-        size = 0.2
-      ) +
-      geom_point(
-        data = df5_1,
-        aes(x = mtspgm74, y = .data[[paste0(var, "1_bwidth", i_str)]], color = regulation_iv),
-        color = "red",
+        aes(x = mtspgm74, y = .data[[paste0(var, "_bwidth", bwidth)]], color = tsp7576),
         size = 0.2
       ) +
       scale_color_manual(
-        values = c("blue" = "blue", "red" = "red"),  # Specify colors
-        labels = c("Blue Line", "Red Line")           # Specify legend labels
+        values = c("0" = "blue", "1" = "red"),
+        labels = c("Unregulated", "Regulated")
       ) +
       geom_vline(aes(xintercept = 75), linewidth = 0.3, color = "black") +
       labs(
         x = "TSPs level in 1974",
-        y = yaxis_title
-      ) #+
-      #theme_classic() +
-      # theme(
-      #   panel.grid.major.y = element_line(color = "gray", linewidth = 0.25)
-      # )
-    file_out <- paste0(dirpath_output, "/figures/lowess_5_", var, "_bwidth", i_str, ".png")
+        y = yaxis_title,
+        title = paste0("Bandwidth = ", bwidth)
+      ) +
+      theme_classic() +
+      theme(
+        panel.grid.major.y = element_line(color = "gray", linewidth = 0.25),
+        legend.title=element_blank(),
+        legend.text = element_text(size = 10)
+      ) +
+      guides(color = guide_legend(override.aes = list(size = 1.5)))
+    file_out <- paste0(dirpath_output, "/figures/lowess_5_", var, "_bwidth", bwidth, ".png")
     ggsave(file_out)
   }
 }
 
 # 6 ----------------------------------------------------------------------------
-df6 <- read_csv(paste0(dirpath_data, "/intermediate/lowess_hedonic_6.csv"))
-df6_0 <- df6[df6$regulation_iv == 0, ]
-df6_1 <- df6[df6$regulation_iv == 1, ]
-
-plt <- ggplot() +
-  geom_point(
-    data = df5_0,
-    aes(x = mtspgm74, y = dlhouse0_bwidth2),
-    color = "blue",
-    size = 0.2
-  ) +
-  geom_point(
-    data = df5_1,
-    aes(x = mtspgm74, y = dlhouse1_bwidth2),
-    color = "red",
-    size = 0.2
-  ) +
-  geom_point(
-    data = df6_0,
-    aes(x = mtspgm74, y = index0),
-    color = "green",
-    size = 0.2,
-    shape = 4
-  ) +
-  geom_point(
-    data = df6_1,
-    aes(x = mtspgm74, y = index1),
-    color = "purple",
-    size = 0.2, 
-    shape = 4
-  ) +
-  geom_vline(aes(xintercept = 75), linewidth = 0.3, color = "black") +
-  labs(
-    x = "TSPs level in 1974",
-    y = "Predicted change in log housing values"
-  ) +
-  theme_classic() +
-  theme(
-    panel.grid.major.y = element_line(color = "gray", linewidth = 0.25)
+df5 <- df5 %>% mutate(type = "actual")
+df6 <- read_csv(paste0(dirpath_data, "/intermediate/lowess_hedonic_6.csv")) %>%
+  mutate(
+    tsp7576 = as.character(tsp7576),
+    type = "index"
   )
-file_out <- paste0(dirpath_output, "/figures/lowess_6_bwidth2.png")
-ggsave(file_out)
+
+df5_6 <- bind_rows(df5, df6) %>%
+  mutate(
+    var_bwidth2 = ifelse(type == "actual", dlhouse_bwidth2, index_bwidth2),
+    var_bwidth3 = ifelse(type == "actual", dlhouse_bwidth3, index_bwidth3),
+    var_bwidth4 = ifelse(type == "actual", dlhouse_bwidth4, index_bwidth4),
+    description = 
+      ifelse(tsp7576 == 1 & type == "actual", "Regulated: actual",
+      ifelse(tsp7576 == 1 & type == "index", "Regulated: index",
+      ifelse(tsp7576 == 0 & type == "actual", "Unregulated: actual",
+      ifelse(tsp7576 == 0 & type == "index", "Unregulated: index",
+             NA))))
+    ) %>%
+  dplyr::select(mtspgm74, starts_with("var_"), tsp7576, type, description)
+
+bwidths <- as.character(2:4)
+
+for (bwidth in bwidths) {
+  plt <- ggplot() +
+    geom_point(
+      data = df5_6,
+      aes(
+        x = mtspgm74, 
+        y = .data[[paste0("var_bwidth", bwidth)]], 
+        color = description
+        ),
+      size = 0.2
+    ) +
+    scale_shape_manual(values = c("actual" = 19, "index" = 4)) +
+    geom_vline(aes(xintercept = 75), linewidth = 0.3, color = "black") +
+    labs(
+      x = "TSPs level in 1974",
+      y = "Predicted change in log housing values",
+      title = paste0("Bandwidth = ", bwidth)
+    ) +
+    theme_classic() +
+    theme(
+      panel.grid.major.y = element_line(color = "gray", linewidth = 0.25),
+      legend.title = element_blank(),
+      legend.text = element_text(size = 10)
+    ) +
+    guides(
+      color = guide_legend(override.aes = list(size = 1.5))
+    )
+  file_out <- paste0(dirpath_output, "/figures/lowess_6_bwidth", bwidth, ".png")
+  ggsave(file_out)
+}
+
 
 # 7 ----------------------------------------------------------------------------
-
 df7 <- read_csv(paste0(dirpath_data, "/intermediate/lowess_hedonic_7.csv")) %>%
-  filter(regulation2 == 1)
+  filter(mtspgm74_50to75 == 1) %>%
+  mutate(tsp7576 = as.character(tsp7576))
 
 varlist <- c("dlhouse", "dgtsp")
+bwidths <- as.character(7:9)
+
 for (var in varlist) {
   if (var == "dlhouse") {
     yaxis_title <- "Change in log housing values"
   } else{
     yaxis_title <- "Change in annual mean TSPs"
   }
-  plt <- ggplot() +
-    geom_point(
-      data = df7,
-      aes(x = mtspgm74, y = .data[[paste0(var, "_noreg")]]),
-      color = "blue",
-      size = 0.2
-    ) +
-    geom_point(
-      data = df7,
-      aes(x = mtspgm74, y = .data[[paste0(var, "_reg")]]),
-      color = "red",
-      size = 0.2
-    ) +
-    geom_vline(aes(xintercept = 75), linewidth = 0.3, color = "black") +
-    labs(
-      x = "TSPs level in 1974",
-      y = yaxis_title
-    ) +
-    theme_classic() +
-    theme(
-      panel.grid.major.y = element_line(color = "gray", linewidth = 0.25)
-    )
-  file_out <- paste0(dirpath_output, "/figures/lowess_7_", var, ".png")
-  ggsave(file_out)
+  for (bwidth in bwidths) {
+    plt <- ggplot() +
+      geom_point(
+        data = df7,
+        aes(x = mtspgm74, y = .data[[paste0(var, "_50to75_bwidth", bwidth)]], color = tsp7576),
+        size = 0.2
+      ) +
+      scale_color_manual(
+        values = c("0" = "blue", "1" = "red"),
+        labels = c("Unregulated", "Regulated")
+      ) +
+      geom_vline(aes(xintercept = 75), linewidth = 0.3, color = "black") +
+      labs(
+        x = "TSPs level in 1974",
+        y = yaxis_title,
+        title = paste0("Bandwidth = ", bwidth)
+      ) +
+      theme_classic() +
+      theme(
+        panel.grid.major.y = element_line(color = "gray", linewidth = 0.25),
+        legend.title=element_blank(),
+        legend.text = element_text(size = 10)
+      ) +
+      guides(color = guide_legend(override.aes = list(size = 1.5)))
+    file_out <- paste0(dirpath_output, "/figures/lowess_7_", var, "_bwidth", bwidth, ".png")
+    ggsave(file_out)
+  }
 }
-
 
