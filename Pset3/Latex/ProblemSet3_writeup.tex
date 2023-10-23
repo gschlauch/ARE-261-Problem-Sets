@@ -50,6 +50,31 @@
   parsep=0pt,
 }
 
+\input{/Users/garyschlauch/Documents/github/ARE-261-Problem-Sets/Pset3/Latex/stata-lstlisting.tex}
+
+\definecolor{codeblue}{rgb}{0.29296875, 0.51953125, 0.68359375}
+\definecolor{codegreen}{rgb}{0.47265625, 0.62890625, 0.40234375}
+\definecolor{codegray}{rgb}{0.95703125, 0.95703125, 0.95703125}
+\definecolor{codecrimson}{rgb}{0.87109375,0.3984375,0.3984375}
+
+\lstset{frame=tb,
+  backgroundcolor=\color{codegray},
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\ttfamily},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{codeblue},
+  commentstyle=\color{codegreen},
+  stringstyle=\color{codecrimson},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=4,
+  frame=tlbr,framesep=4pt,framerule=0pt
+}
+
 
 
 \usepackage[space]{grffile} %Loading the package
@@ -127,8 +152,6 @@ bottom = 1in,
 \renewcommand{\thefigure}{\arabic{figure}}
 \renewcommand{\thetable}{\arabic{table}}
 
-\pagenumbering{gobble}
-
 \begin{document}
 
 \begin{center}
@@ -140,41 +163,98 @@ Problem Set 2
 Figure \ref{fig1} plots total daily NOx emissions in the NBP-participating states.
 
 \section*{Problem 2}
+Note: According to Figure 1 in the paper, the NBP participating states include Alabama, Connecticut, Delaware, District of Columbia, Illinois, Indiana, Kentucky, Maryland, Massachusetts, Michigan, Missouri, New Jersey, New York, North Carolina, Ohio, Pennsylvania, Rhode Island, South Carolina, Tennessee, Virginia, and West Virginia. However, since Missouri only entered the market in 2007, I exclude it from the list of NBP states for the proceeding analysis since we are only utilizing 2002 and 2005 data.
 
 \subsubsection*{Part a}
 The econometric equation is
 \begin{align}
-	Y_t = \beta_0 + \beta_1 D_t + \beta_2 \tilde{X}_t + \beta_3 \tilde{X}_t^2 + \epsilon_t
+	Y_d = \beta_0 + \beta_1 \text{Summer}_d + \beta_2 \tilde{X}_d + \beta_3 \tilde{X}_d^2 + \epsilon_t
 \end{align}
-where $Y_t$ is the total NOx emissions on day-of-year $t$, $ D$ is an indicator equal to one for days between May 1st and September 30th (the ozone season), $\tilde{X}_t = \gamma_t - c$, where $\gamma_t$ is the day of the year and $c$ is the cutoff date - either May 1st or September 30th. The coefficient of interest, $\beta_1$, is the estimated effect of the NOx Budget Trading Program on NOx emissions at the cutoff date.
+where $Y_d$ is the total daily NOx emissions (in tons) on day-of-year $d$ in 2005, $\text{Summer}_d$ is an indicator equal to one for days between May 1st and September 30th (the ozone season), $\tilde{X}_d = \gamma_d - c$, where $\gamma_d$ is the day of the year and $c$ is the cutoff date - either May 1st or September 30th. The coefficient of interest, $\beta_1$, represents the estimated effect of the NOx Budget Trading Program on NOx emissions at the cutoff date.
 
 \subsubsection*{Part b}
-Columns 1--2 of Table \ref{tab1} report the estimated effect of the NOx Budget Trading Program on NOx emissions using the polynomial RD. Using the May 1st (September 30th) cutoff, we find that the NBT led to a decline in total NOx emissions of roughly 2108.6 (2594.4) units in 2005.\footnote{Note that I interpreted ``1 month on each side of the discontinuity'' as $\pm$ 30 days (inclusive) on either side of the cutoff date; hence, the ``treated'' sample has 31 observations - the cutoff date and the 30 days on that side of the cutoff - and the ``untreated'' sample has 30 observations.}
+Columns 1--2 of Table \ref{tab1} report the estimated effect of the NOx Budget Trading Program on NOx emissions using the polynomial RD. Using the May 1st (September 30th) cutoff, I find that the NBP led to an average decline in total NOx emissions of 2069.498 (2528.294) tons in 2005 across states participating in the NBP.\footnote{Note that I interpreted ``1 month on each side of the discontinuity'' as $\pm$ 30 days (inclusive) on either side of the cutoff date; hence, the ``treated'' sample has 31 observations - the cutoff date and the 30 days on that side of the cutoff - and the ``untreated'' sample has 30 observations.}
 
 \subsubsection*{Part c}
-Because we are summing total NOx emissions to the daily level in 2005, there is only variation across days within each regression's 2-month sample window. Thus, OLS is computing an difference in means at the cutoff date after flexibly controlling for quadratic trends across the cutoff. This difference in means is unweighted and includes all observations in the 30 day window on either side of the cutoff. This seems reasonable since we are summing emissions across states and only using one year of data.
+Because we are summing total NOx emissions to the daily level in 2005, there is only variation across days within each regression's 2-month sample window. Thus, OLS is computing a difference in means at the cutoff date after flexibly controlling for quadratic trends across the sample period. This difference in means is unweighted and includes all observations in the 30 day window on either side of the cutoff. That is, we are using a triangular kernel. This seems reasonable since we are summing emissions across states and only using one year of data. Should we desire, we could explore alternate kernel types (e.g,. triangular) to test the robustness of our specification.
 
-The key identifying assumption in this design is continuity, which means that the expected potential outcomes are continuous at the cutoff. This assumption will fail if one or more of the determinants of NOx aside from the NBP (e.g., weather flucuations or economic activity) jumps discontinuously at the cutoff. In this case, our RD estimates will be biased.
+The key identifying assumption in this design is continuity, which means that the expected potential outcomes are continuous at the cutoff. This assumption will fail if one or more of the determinants of NOx aside from the NBP (e.g., weather flucuations or economic activity) jumps discontinuously at the cutoff. Note that our RD estimates will be biased if the continuity assumption is not satisfied.
 
 \section*{Problem 3}
 
 \subsubsection*{Part a}
 
 \begin{align}
-	Y_t = \beta_0 + \beta_1 D_t + \beta_2 \tilde{X}_t + \beta_3 \tilde{X}_t^2 + \beta_4 \tilde{X}_t \times 
-		D_t + \beta_5 \tilde{X}_t^2 \times D + \epsilon_t
+	Y_d = \beta_0 + \beta_1 \text{Summer}_d + \beta_2 \tilde{X}_d + \beta_3 \tilde{X}_d^2 + \beta_4 \tilde{X}_d \times 
+		\text{Summer}_d + \beta_5 \tilde{X}_d^2 \times \text{Summer}_d + \epsilon_d,
 \end{align}
+where $\text{Summer}_d$ and $ \tilde{X}_d$ are defined as before.
 
 \subsubsection*{Part b}
-Columns 3--4 of Table \ref{tab1} report the estimated effect of the NOx Budget Trading Program on NOx emissions using the spline RD. Using the May 1st (September 30th) cutoff, we find that the NBT led to a decline in total NOx emissions of roughly 1858.7 (2771.9) units in 2005.
+Columns 3--4 of Table \ref{tab1} report the estimated effect of the NOx Budget Trading Program on NOx emissions using the spline RD. Using the May 1st (September 30th) cutoff, I find that the NBP led to a decline in total NOx emissions of roughly 1835.393 (2701.130) tons in 2005 across states participating in the NBP.
 
 \section*{Problem 4}
 
+\subsubsection*{Part a}
+The econometric equation is
+\begin{align}
+	Y_d = \beta_0 + \beta_1 \text{Summer}_d + \epsilon_d,
+\end{align}
+where $Y_{d}$ is total daily NOx emissions (in tons) on day-of-year $d$ in 2005, $\text{Summer}_d$ is defined as before, and $\epsilon_d$ is an error term. The coefficient of interest, $\beta_1$, represents the difference in 2005 average total daily NOx emissions in the summer versus the winter across NBP participating states. That is, $\hat{\beta}_1 = (\bar{Y}_{\text{Summer}=1} - \bar{Y}_{\text{Summer}=0})$.
+
+\subsubsection*{Part b}
+Using this cross-sectional estimator in 2005, I estimate that the NBP reduced total daily summer NOx emissions in 2005 by an average of 3097.434 tons (Column 1, Table \ref{table:CS_DiD}). This estimate is statistically significant at the 1\% level.
+
 \section*{Problem 5}
+
+\subsubsection*{Part a}
+The econometric equation is
+\begin{align}
+	Y_{dt} = \beta_0 + \beta_1 \text{Summer}_d + \beta _2\text{Post}_t + \beta_3 \text{Summer}_d \times \text{Post}_t + \epsilon_{dt},
+\end{align}
+where $Y_{dt}$ is total daily NOx emissions (in tons) on day of year $d$ and year $t$, $\text{Summer}_d$ is defined as before, $\text{Post}_t$ is a binary indicator equal to one for the year 2005 and zero for the year 2002, and $\epsilon_{dt}$ is an error term. The coefficient of interest, $\beta_3$, represents the difference in average total daily NOx emissions in the summer vs winter and before vs after the NBP went into effect across NBP participating states. That is, 
+\begin{align*}
+	\hat{\beta}_3 = (\bar{Y}_{\text{Summer}=1, \text{Post} = 1} -  \bar{Y}_{\text{Summer}=0, \text{Post} = 1}) - (\bar{Y}_{\text{Summer}=1, \text{Post} = 0} - \bar{Y}_{\text{Summer}=0, \text{Post} = 0}).
+\end{align*}
+
+\subsubsection*{Part b}
+Using the pre/post DiD estimator, I estimate that the NBP reduced total daily summer NOx emissions in 2005 by an average of 2888.387 tons (Column 2, Table \ref{table:CS_DiD}). This estimate is statistically significant at the 1\% level.
 
 \section*{Problem 6}
 
+\subsubsection*{Part a}
+The econometric equation is
+\begin{align}
+	Y_{id} = \beta_0 + \beta_1 \text{Summer}_d + \beta _2 \text{East}_i + \beta_3 \text{Summer}_d \times \text{East}_i + \epsilon_{id},
+\end{align}
+where $Y_{id}$ is total daily NOx emissions (in tons) in region $i$ (East vs West) on day-of-year $d$, $\text{Summer}_d$ is defined as before, $\text{East}_i$ is a binary indicator equalling one for Eastern states participating in the NBP and zero for Western states, and $\epsilon_{id}$ is an error term. The coefficient of interest, $\beta_3$, represents the difference in 2005 average total daily NOx emissions in the summer vs winter and in the East vs West.\footnote{Following the main analysis of the paper, I exclude Wisconsin, Iowa, Missouri, Georgia, Mississippi, Maine, New Hampshire, and Vermont from the regression sample. Per our email correspondence, I also exclude Alaska and Hawaii.} That is,
+\begin{align*}
+	\hat{\beta}_3 = (\bar{Y}_{\text{Summer}=1, \text{East} = 1} -  \bar{Y}_{\text{Summer}=0, \text{East} = 1}) - (\bar{Y}_{\text{Summer}=1, \text{East} = 0} - \bar{Y}_{\text{Summer}=0, \text{East} = 0}).
+\end{align*}
+
+\subsubsection*{Part b}
+Using the East/West DiD, I estimate that the NBP reduced total daily summer NOx emissions in 2005 by an average of 3496.941 tons (Column 3, Table \ref{table:CS_DiD}). This estimate is statistically significant at the 1\% level.
+
 \section*{Problem 7}
+
+\subsubsection*{Part a}
+The econometric equation is
+\begin{align}
+	Y_{idt} &= \beta_0 + \beta_1 \text{Summer}_d + \beta_2 \text{East}_i + \beta_3 \text{Post}_t + \beta_4  \text{Summer}_d \times \text{East}_i + \beta_5 \text{Summer}_d \times \text{Post}_t  \nonumber \\
+	& \quad  + \beta_6 \text{East}_i \times \text{Post}_t + \beta_7 \text{Summer}_d \times  \text{East}_i \times  \text{Post}_t + \epsilon_{idt},
+\end{align}
+where $Y_{idt}$ is total NOx emissions (in tons) in region $i$ (East vs West), day of year $d$, and year $t$, $\text{Summer}_d$, $\text{East}_i$, and  $\text{Post}$ are defined as before, and $\epsilon_{idt}$ is an error term. The coefficient of interest, $\beta_7$, represents the difference in average total daily NOx emissions in the East vs West, summer vs winter, and before vs after the NBP went into effect. That is,
+\footnotesize
+\begin{align*}
+	\hat{\beta}_7 &= [(\bar{Y}_{\text{Summer}=1, \text{East} = 1, \text{Post} = 1} -  \bar{Y}_{\text{Summer}=1, \text{East} = 1, \text{Post} = 0}) - (\bar{Y}_{\text{Summer}=0, \text{East} = 1, \text{Post} = 1} - \bar{Y}_{\text{Summer}=0, \text{East} = 1, \text{Post} = 1}] \\
+	& \quad  - [(\bar{Y}_{\text{Summer}=1, \text{East} = 0, \text{Post} = 1} -  \bar{Y}_{\text{Summer}=1, \text{East} = 0, \text{Post} = 0}) - (\bar{Y}_{\text{Summer}=0, \text{East} = 0, \text{Post} = 1} - \bar{Y}_{\text{Summer}=0, \text{East} = 0, \text{Post} = 1}].
+\end{align*}
+\normalsize
+
+\subsubsection*{Part b}
+Using the triple difference estimator, I estimate that the NBP reduced total daily summer NOx emissions by an average of 2911.723 tons (Column 3, Table \ref{table:CS_DiD}). This estimate is statistically significant at the 1\% level.
+
+\subsubsection*{Part c}
 
 \section*{Problem 8}
 
@@ -193,7 +273,7 @@ with first-order conditions
 \begin{align}
 	\frac{\partial u}{\partial X} &= \lambda, \\
 	\frac{\partial u}{\partial f} &= \lambda p_w \\
-	\frac{\partial u}{\partial s} \frac{\partial s}{\partial a} &= \lambda \left[ \frac{\partial s}{\partial a} p_w + p_a  \right].
+	\frac{\partial u}{\partial s} \frac{\partial s}{\partial a} &= \lambda \left[ \frac{\partial s}{\partial a} p_w + p_a  \right] \label{eqn:foc_a}
 \end{align}
 Recall that the marginal cost of the numeraire good, $X$ , is 1; the marginal cost of leisure, $f$, is $p_w$ (i.e., the hourly wage you give up by not working); and the marginal cost of defensive actions, $a$, is the direct cost, $p_a$, net of the saved costs from taking fewer sick days (i.e., the additional wages that can be earned from taking fewer sick days due to improved health) since $\partial s/\partial a < 0$. Moreover, recall that $\lambda$ is the ``shadow price,'' or the utility gain at the optimum of relaxing the budget constraint by one dollar. Therefore, each first-order condition says that the marginal utility of the good in question equals the shadow price times the marginal cost. In other words, the marginal utility of consuming one additional unit equals the marginal disutility of purchasing one additional unit.
 
@@ -218,10 +298,25 @@ $\partial s/\partial c$ represents the partial effect of ambient pollution on he
 
 
 \section*{Problem 13}
-
+First, we can rearrange equation (\ref{eqn_dsdc}) as
+\begin{align*}
+	\frac{\partial s}{\partial a} = \frac{1}{\partial a^* / \partial c} \left[ \frac{d s}{d c} - \frac{\partial s}{\partial c} \right]
+\end{align*}
+Substituting this expression into equation (\ref{eqn:foc_a}), we get
+\begin{align*}
+	\frac{\partial u}{\partial s} \left( \frac{1}{\partial a^* / \partial c} \left[ \frac{d s}{d c} - \frac{\partial s}{\partial c} \right] \right) &= \lambda p_w \left( \frac{1}{\partial a^* / \partial c} \left[ \frac{d s}{d c} - \frac{\partial s}{\partial c} \right] \right)  + \lambda p_a
+\end{align*}
+Simplifying and rearranging yields
+\begin{align*}
+	& \frac{\partial u}{\partial s} \left[ \frac{d s}{d c} - \frac{\partial s}{\partial c} \right] = \lambda p_w \left[ \frac{d s}{d c} - \frac{\partial s}{\partial c} \right] + \lambda p_a \frac{\partial a^*}{\partial c} \\
+	\Leftrightarrow \; & \frac{\partial u}{\partial s} \frac{ds}{dc} - \frac{\partial u}{\partial s} \frac{\partial s}{\partial c} = \lambda p_w \frac{ds}{dc} - \lambda p_w \frac{\partial s}{\partial c} + \lambda p_a \frac{\partial a^*}{\partial c} \\
+	\Leftrightarrow \; & \lambda p_w \frac{\partial s}{\partial c} - \frac{\partial u}{\partial s}{\partial s}{\partial c} =  \lambda p_w \frac{ds}{dc} + \lambda p_a \frac{\partial a^*}{\partial c} - \frac{\partial u}{\partial s} \frac{ds}{dc} \\
+	\Leftrightarrow \; & p_w \frac{\partial s}{\partial c} - \frac{1}{\lambda} \frac{\partial u}{\partial s}{\partial s}{\partial c} =  \left(p_w \frac{ds}{dc} \right) + \left( p_a \frac{\partial a^*}{\partial c} \right) - \left( \frac{\partial u / \partial s}{\lambda} \frac{ds}{dc} \right) \\
+	\Leftrightarrow \; & w_c =  \left(p_w \frac{ds}{dc} \right) + \left( p_a \frac{\partial a^*}{\partial c} \right) - \left( \frac{\partial u / \partial s}{\lambda} \frac{ds}{dc} \right).
+\end{align*}
 
 \section*{Problem 14}
-
+In the model, $p_a$ represents the cost of all defensive behaviors taken against air pollution. It is worth noting that medications alone - which is what the paper uses to measure defensive investments - do not capture the full spectrum of potential defensive investments. Other defensive investments such as purchasing air filters and limiting time spent outdoors are also likely important components of defensive investments.
 
 %%%%%%%%%%%%%%%%%%%%%
 \clearpage
@@ -232,7 +327,7 @@ $\partial s/\partial c$ represents the partial effect of ambient pollution on he
 \centering
 \caption{Total Daily NOX Emissions in the NBP-Participating States}
 \includegraphics[width=0.99\textwidth]{Fig1.png}
-\caption*{\footnotesize{\emph{Notes:} Figure 1 shows average total daily NOx emissions in the NBP participating states in 2002 and 2005. These estimates are obtained from an OLS regression of NOx emissions on 6 day-of-week indicators and a constant. The values in the graph equal the constant plus the regression residuals, so that the graph depicts fitted values for the reference category (Wednesday). Total daily NOx emissions on Y-axis are measured in thousands of tons. The sample includes emissions from all the Acid Rain Units. NBP participating states include: Alabama, Connecticut, Delaware, District of Columbia, Illinois, Indiana, Kentucky, Maryland, Massachusetts, Michigan, Missouri, New Jersey, New York, North Carolina, Ohio, Pennsylvania, Rhode Island, South Carolina, Tennessee, Virginia, and West Virginia.}}
+\caption*{\footnotesize{\emph{Notes:} Figure 1 shows average total daily NOx emissions in the NBP participating states in 2002 and 2005. These estimates are obtained from an OLS regression of NOx emissions on 6 day-of-week indicators and a constant. The values in the graph equal the constant plus the regression residuals, so that the graph depicts fitted values for the reference category (Wednesday). Total daily NOx emissions on Y-axis are measured in thousands of tons. The sample includes emissions from all the Acid Rain Units. NBP participating states include: Alabama, Connecticut, Delaware, District of Columbia, Illinois, Indiana, Kentucky, Maryland, Massachusetts, Michigan, New Jersey, New York, North Carolina, Ohio, Pennsylvania, Rhode Island, South Carolina, Tennessee, Virginia, and West Virginia. Note that I do not include Missouri since the NBP went into effect in 2007 there.}}
 \label{fig1}
 \end{figure}
 
@@ -244,12 +339,362 @@ $\partial s/\partial c$ represents the partial effect of ambient pollution on he
 
 \input{Table_RD_estimates.tex}
 
+\vspace{2cm}
+
+\input{Table_cross-sectional_and_DiD_estimates.tex}
+
 %%%%%%%%%%%%%%%%%%%%%
 \clearpage
 %%%%%%%%%%%%%%%%%%%%%
 
 \section*{Code}
 
+\subsubsection*{Setup}
+\footnotesize
+\begin{lstlisting}[language=Stata, numbers=none]
+********************************************************************************
+* ARE 261 Pset 1 - Joe's Half
+* Last updated: October 22, 2023
+* Purpose: initialize file paths and settings
+********************************************************************************
 
+clear all
+set more off
+set scheme scheme_fb2
+
+global dirpath_home "\\tsclient\Documents\github\ARE-261-Problem-Sets\Pset3"
+global dirpath_server "C:\Users\gschlauch\Documents\ARE261\pset3"
+global dirpath_code "$dirpath_home\code"
+global dirpath_data "$dirpath_server\data"
+global dirpath_output "$dirpath_home\output"
+\end{lstlisting}
+
+\subsubsection*{Clean data}
+\begin{lstlisting}[language=Stata, numbers=none]
+********************************************************************************
+* Purpose: clean the raw data
+********************************************************************************
+
+* Initialize settings and filepaths
+do "\\tsclient\Documents\github\ARE-261-Problem-Sets\Pset3\scripts\setup.do"
+
+* Append raw data
+local files: dir "$dirpath_data\raw" files "*.csv"
+local i = 1
+foreach file of local files {
+	import delimited using "$dirpath_data\raw\\`file'", clear
+	tempfile file`i'
+	save `file`i''
+	local i = `i' + 1
+}
+clear
+forval i = 1/4 {
+	append using `file`i''
+}
+
+* Keep key variables
+keep state date nox* 
+rename noxmassshorttons nox_mass
+rename noxratelbsmmbtu nox_rate
+
+* Create date variables
+gen date_stata = date(date, "YMD")
+format date_stata %td
+gen year = year(date_stata)
+drop date
+
+* Create NBP binary indicator = 1 for NBP states and 0 otherwise. Note that I 
+* exclude Missouri from the list because the NBP did not begin operating there
+* until 2007 and the problem set is focused on 2002 vs 2005.
+gen nbp = 0 
+foreach stabv in AL CT DE DC IL IN KY MD MA MI NJ NY NC OH PA RI SC TN VA WV {
+	qui replace nbp = 1 if state == "`stabv'"
+}
+
+* Create indicator for eastern states, excluding states that were excluded in
+* the paper
+gen east = nbp
+foreach stabv in WI IA MO GA MS ME NH VT AK HI {
+	qui replace east = . if state == "`stabv'"
+}
+
+* Output
+compress *
+save "$dirpath_data\clean\NOx_data_cleaned.dta", replace
+\end{lstlisting}
+
+\subsubsection*{Analysis}
+\begin{lstlisting}[language=Stata, numbers=none]
+******************************************************************************
+* Purpose: analyze the cleaned data
+******************************************************************************
+
+* Initialize settings and filepaths
+do "\\tsclient\Documents\github\ARE-261-Problem-Sets\Pset3\scripts\setup.do"
+
+* Question 1 *******************************************************************
+
+use "$dirpath_data\clean\NOx_data_cleaned.dta", clear
+
+* Keep NBP participating states
+keep if nbp == 1
+
+* Collapse the emissions data by day-year
+gcollapse (sum) nox_mass, by(year date_stata)
+
+* Convert to thousands of tons
+replace nox_mass = nox_mass / 1000
+
+* Create day of week indicators
+gen dow = dow(date_stata)
+tab dow, gen(dow)
+
+* Regress NOx emissions on 6 day-of-week indicators and a constant
+reghdfe nox_mass dow1-dow3 dow5-dow7 dow4, noabs residuals(resid_nox_emit)
+gen fit_nox_emit = resid_nox_emit + _b[_cons]
+
+* Plot Figure 1
+gen doy = doy(date_stata)
+gsort year doy
+twoway ///
+	(line fit_nox_emit doy if year == 2002, /// 
+		lcolor(blue) lpattern(dash)) ///
+	(line fit_nox_emit doy if year == 2005, ///
+		lcolor(blue) lpattern(solid) lwidth(thick)), ///
+	xtitle("Day of Year") ///
+	legend(order(1 "2002" 2 "2005") pos(5) ring(0) rows(2)) ///
+	xlab(1 "Jan 1" 121 "May 1" 274 "Oct 1" 365 "Dec 31") ///
+	ytitle("")
+graph export "$dirpath_output\Figures\Fig1.png", replace
+
+
+* Questions 2 and 3 **********************************************************
+
+clear all
+use "$dirpath_data\clean\NOx_data_cleaned.dta"
+
+* Keep NBP participating states
+keep if nbp == 1
+
+* Restrict to the year 2005
+keep if year == 2005
+
+* Get the total emissions by date
+gcollapse (sum) nox_mass, by(date_stata)
+gen month = month(date_stata)
+
+* Create treatment indicator = 1 during ozone season
+gen summer =  inlist(month, 5, 6, 7, 8, 9)
+
+* Create RD window indicators
+gen rdwindow_1 = (inrange(date_stata, td(01may2005) - 30, td(01may2005) + 30))
+gen rdwindow_2 = (inrange(date_stata, td(30sep2005) - 30, td(30sep2005) + 30))
+
+* Create running variables cenetered at the cutoff values
+gen runvar_minus_c1 = date_stata - td(01may2005)
+gen runvar_minus_c1_sq = runvar_minus_c1^2
+
+gen runvar_minus_c2 = date_stata - td(30sep2005)
+gen runvar_minus_c2_sq = runvar_minus_c2^2
+
+* Run the regressions for question 2
+forvalues i = 1/2 {
+	eststo: reghdfe nox_mass summer ///
+		runvar_minus_c`i' runvar_minus_c`i'_sq ///
+		if rdwindow_`i' == 1, noabs
+	if `i' == 1 {
+		estadd local cutoff "May 1"
+	}
+	else {
+		estadd local cutoff "Sep. 30"
+	}
+}
+
+* Run the regressions for question 3
+forvalues i = 1/2 {
+	eststo: reghdfe nox_mass summer ///
+		runvar_minus_c`i' runvar_minus_c`i'_sq ///
+		c.runvar_minus_c`i'#i.summer ///
+		c.runvar_minus_c`i'_sq#i.summer ///
+		if rdwindow_`i' == 1, noabs
+	if `i' == 1 {
+		estadd local cutoff "May 1"
+	}
+	else {
+		estadd local cutoff "Sep. 30"
+	}
+}
+
+* Create latex table containing the point estimates on summer
+cd "$dirpath_output\Tables"
+la var nox_mass "NOx"
+la var summer "1(NBP Operating)"
+
+local longnote "\emph{Notes}: The table dislpays estimates for the the effect of the NOx Budget Trading Program on average total daily NOx emissions. Columns 1--2 report the results using the polynomial regresion discontinuity, and Columns 3--4 report the results using the spline regression discontinuity. Columns 1 and 3 include the 30 days before and after May 1st in the sample, and Columns 2 and 4 include the 30 days before and after September 30th. Standard errors are in parentheses. * p<0.05, ** p<0.01, *** p<0.001"
+
+esttab using "Table_RD_estimates.tex", replace ///
+	title("Polynomial and Spline RD estimates for the effect of the NBP on NOx emissions \label{tab1}") ///
+	label b(3) se(3) keep(summer) ///
+	mgroups( ///
+		"Polynomial RD" "Spline RD", pattern(1 0 1 0) span ///
+		prefix(\multicolumn{@span}{c}{) suffix(}) ///
+		erepeat(\cmidrule(lr){@span}) ///
+		) ///
+	substitute(\_ _ {l} {p{0.8\linewidth}}) wrap ///
+	stats(cutoff, labels("Cutoff date") fmt(0)) booktabs ///
+	nonotes addnotes("`longnote'")
+eststo clear
+
+
+* Question 4 ***************************************************************
+
+use "$dirpath_data\clean\NOx_data_cleaned.dta", clear
+keep if year == 2005 
+keep if nbp == 1  
+gen month = month(date_stata)
+gen summer = inlist(month, 5, 6, 7, 8, 9)
+gcollapse (sum) nox_mass, by(date_stata summer)
+
+reghdfe nox_mass summer, noabs
+
+local var1 summer
+local b1 = _b[`var1']
+local se1 = _se[`var1']
+
+* Question 5 ***************************************************************
+	
+use "$dirpath_data\clean\NOx_data_cleaned.dta", clear
+keep if east == 1 
+gen month = month(date_stata)
+gen summer = inlist(month, 5, 6, 7, 8, 9)
+gcollapse (sum) nox_mass, by(date_stata year summer)
+gen post = (year == 2005)
+gen summerXpost = summer * post
+
+reghdfe nox_mass summer post summerXpost, noabs
+
+local var2 summerXpost
+local b2 = _b[`var2']
+local se2 = _se[`var2']
+	
+* Question 6 ***************************************************************
+	
+use "$dirpath_data\clean\NOx_data_cleaned.dta", clear
+keep if year == 2005
+drop if missing(east)
+gen month = month(date_stata)
+gen summer = inlist(month, 5, 6, 7, 8, 9)
+gcollapse (sum) nox_mass, by(date_stata east summer)
+gen summerXeast = summer * east
+
+reghdfe nox_mass summer east summerXeast, noabs
+
+local var3 summerXeast
+local b3 = _b[`var3']
+local se3 = _se[`var3']
+	
+* Question 7 ***************************************************************
+
+use "$dirpath_data\clean\NOx_data_cleaned.dta", clear
+drop if missing(east)
+gen month = month(date_stata)
+gen summer = inlist(month, 5, 6, 7, 8, 9)
+gcollapse (sum) nox_mass, by(date_stata year east summer)
+gen post = (year == 2005)
+gen summerXeast = summer*east 
+gen summerXpost = summer*post 
+gen eastXpost = east*post
+gen summerXeastXpost = summer*east*post 
+
+reghdfe nox_mass summer post east summerXeast summerXpost ///
+	eastXpost summerXeastXpost, noabs
+	
+local var4 summerXeastXpost
+local b4 = _b[`var4']
+local se4 = _se[`var4']
+	
+* Tabulate the estimates from Questions 4-7 **********************************
+	
+* Get the significance stars for the parameter estimate of interest in each 
+* regression
+forvalues i = 1/4 {
+	
+	local t_stat = `b`i'' / `se`i''
+	local pval = 2 * ttail(e(df_r), abs(`t_stat'))
+	if `pval' < 0.01 {
+		local stars`i' = "***"
+	} 
+	else if `pval' < 0.05 {
+		local stars`i' = "**"
+	} 
+	else if `pval' < 0.1 {
+		local stars`i' = "*"
+	} 
+	else {
+		local stars`i' = ""
+	}
+	
+}
+
+* Begin table
+local own_file = 0
+capture file close myfile
+file open myfile using "$dirpath_output/tables/Table_cross-sectional_and_DiD_estimates.tex", write replace
+if `own_file' == 1 {
+file write myfile "\documentclass[12pt]{article}" _n
+file write myfile "\usepackage{amsmath}" _n
+file write myfile "\usepackage{tabularx}" _n
+file write myfile "\usepackage{booktabs}" _n
+file write myfile "\begin{document}" _n
+file write myfile "\pagenumbering{gobble}" _n
+file write myfile _n
+}
+file write myfile "\begin{table}[ht]" _n
+file write myfile "\caption{Cross-sectional and DiD estimates of the effect of the NBP on NOx emissions}" _n 
+file write myfile "\centering" _n
+file write myfile "\normalsize" _n
+file write myfile "\begin{tabular}{cccc}" _n
+file write myfile "\toprule" _n
+file write myfile "\centering" _n
+file write myfile " (1) & (2) & (3) & (4) \\" _n
+file write myfile "\midrule" _n
+
+
+* Write the results
+forvalues i = 1(1)4 {
+	local b`i' = round(`b`i'', 0.001)
+	file write myfile "`b`i''`stars`i''" _tab
+	if `i' != 4 {
+		file write myfile " &" _tab
+	}
+}
+file write myfile "\\" _n
+
+forvalues i = 1(1)4 {
+	local se`i' = round(`se`i'', 0.001)
+	file write myfile "(`se`i'')" _tab
+	if `i' != 4 {
+		file write myfile " &" _tab
+	}
+}
+file write myfile "\\" _n
+
+* End table
+file write myfile "\bottomrule" _n
+file write myfile "\end{tabular}" _n
+file write myfile "\caption*{\footnotesize \emph{Notes:} The table dislpays estimates for the the effect of the NOx Budget Trading Program on average total daily NOx emissions. Columns 1 reports the estimated coefficient of interest from the cross-sectional specification in Question 4. Column 2 the estimated coefficient of interest from the Pre vs Post DiD in Question 5. Column 3 reports the estimated coefficient of interest from the East vs West DiD in Question 6. Finally, Column 4 reports the estimated coefficient of interest from the triple-difference specification in Question 7. Standard errors are in parentheses. * p<0.05, ** p<0.01, *** p<0.001}" _n
+file write myfile "\label{table:CS_DiD}" _n
+file write myfile "\end{table}" _n
+if `own_file' == 1 {
+file write myfile "\end{document}" _n
+}
+file close myfile
+\end{lstlisting}
+
+\normalsize
+
+\vspace*{\fill}
+\centering
+Garrison (Gary) Schlauch
 
 \end{document}
