@@ -1,0 +1,255 @@
+\documentclass[12pt]{article}
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+\fancyfoot{}
+\cfoot{\thepage{}~of~\pageref{LastPage}}
+\usepackage{caption}
+\usepackage[pdftex]{graphicx}
+\usepackage{epstopdf}
+\usepackage{mathtools}
+\usepackage{longtable}
+\usepackage{scrextend}
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{indentfirst}
+\usepackage{amsmath}
+\usepackage{amstext}
+\usepackage{amsthm}
+\usepackage{bbm}
+\usepackage{enumerate}
+\usepackage{subcaption}
+\usepackage{caption}
+\usepackage{amssymb}
+\usepackage{breqn}
+\usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue]{hyperref}
+\usepackage{bigints}
+\usepackage{color}
+%\usepackage{parskip}
+\usepackage[letterpaper]{geometry}
+\usepackage{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{setspace}
+\usepackage{keyval}
+\usepackage{ifthen}
+\usepackage[american]{babel}
+\usepackage{etoolbox}
+\usepackage[all]{nowidow}
+\usepackage[utf8]{inputenc}
+\usepackage{csquotes}
+\usepackage{adjustbox}
+\usepackage{afterpage}
+\usepackage{comment}
+\usepackage{enumitem}
+\usepackage{pythonhighlight}
+\usepackage{url}
+\setlist{  
+  listparindent=\parindent,
+  parsep=0pt,
+}
+
+
+
+\usepackage[space]{grffile} %Loading the package
+
+% Common base path for both figures and tables
+\newcommand{\commonpath}{/Users/garyschlauch/Documents/github/ARE-261-Problem-Sets/Pset1/}
+
+% Setting the graphics path
+\graphicspath{{/Users/garyschlauch/Documents/github/ARE-261-Problem-Sets/Pset3/output/figures}} 
+
+% Setting the tables path
+\makeatletter
+\def\input@path{{/Users/garyschlauch/Documents/github/ARE-261-Problem-Sets/Pset3/output/tables}}
+\makeatother
+
+
+
+
+\DeclareRobustCommand{\bbone}{\text{\usefont{U}{bbold}{m}{n}1}}
+
+\DeclareMathOperator{\EX}{\mathbb{E}}% expected value
+
+\usepackage{scalerel,stackengine}
+\stackMath
+\newcommand\reallywidehat[1]{%
+\savestack{\tmpbox}{\stretchto{%
+  \scaleto{%
+    \scalerel*[\widthof{\ensuremath{#1}}]{\kern-.6pt\bigwedge\kern-.6pt}%
+    {\rule[-\textheight/2]{1ex}{\textheight}}%WIDTH-LIMITED BIG WEDGE
+  }{\textheight}% 
+}{0.5ex}}%
+\stackon[1pt]{#1}{\tmpbox}%
+}
+
+\newcommand{\indep}{\perp \!\!\! \perp}
+
+\DeclareMathOperator*{\plim}{plim}
+
+%\renewcommand{\theenumi}{\Alph{enumi}}
+
+\usepackage[backend=biber, uniquename=false, uniquelist=false, url = false, doi=false, isbn=false, authordate, natbib]{biblatex-chicago}
+\addbibresource{mainbib.bib}
+%\renewcommand*{\nameyeardelim}{\addcomma\space}
+
+\usepackage{appendix}
+\renewcommand\appendixpagename{\vspace{-10mm}\centering{\Large Appendix}}
+
+\AtEveryBibitem{%
+ \ifentrytype{online}
+   {}
+    {\clearfield{urlyear}\clearfield{urlmonth}\clearfield{urlday}}}
+
+\AtEveryBibitem{\clearfield{eprinttype}\clearfield{eprint}}
+
+
+\geometry{
+top = 1in,            % <-- you want to adjust this
+inner = 1in,
+outer = 1in,
+bottom = 1in,
+%headheight = 3ex,       % <-- and this
+%headsep = 2ex,          % <-- and this
+}
+\newcommand{\argmax}{\operatornamewithlimits{argmax}}
+\newcommand{\V}{\mathbb{V}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\tr}{\text{tr}}
+\newcommand{\inv}{^{-1}}
+\newcommand{\qedblack}{\hfill $\blacksquare$}
+\newcommand{\Reals}{\mathbb{R}}
+\newcommand{\rv}[1]{\textcolor{red}{#1}}
+\newtheorem{theorem}{Theorem}
+
+\usepackage{booktabs}
+\renewcommand{\thefigure}{\arabic{figure}}
+\renewcommand{\thetable}{\arabic{table}}
+
+\pagenumbering{gobble}
+
+\begin{document}
+
+\begin{center}
+ARE 261 - Joe's Half \\
+Problem Set 2
+\end{center}
+
+\section*{Problem 1}
+Figure \ref{fig1} plots total daily NOx emissions in the NBP-participating states.
+
+\section*{Problem 2}
+
+\subsubsection*{Part a}
+The econometric equation is
+\begin{align}
+	Y_t = \beta_0 + \beta_1 D_t + \beta_2 \tilde{X}_t + \beta_3 \tilde{X}_t^2 + \epsilon_t
+\end{align}
+where $Y_t$ is the total NOx emissions on day-of-year $t$, $ D$ is an indicator equal to one for days between May 1st and September 30th (the ozone season), $\tilde{X}_t = \gamma_t - c$, where $\gamma_t$ is the day of the year and $c$ is the cutoff date - either May 1st or September 30th. The coefficient of interest, $\beta_1$, is the estimated effect of the NOx Budget Trading Program on NOx emissions at the cutoff date.
+
+\subsubsection*{Part b}
+Columns 1--2 of Table \ref{tab1} report the estimated effect of the NOx Budget Trading Program on NOx emissions using the polynomial RD. Using the May 1st (September 30th) cutoff, we find that the NBT led to a decline in total NOx emissions of roughly 2108.6 (2594.4) units in 2005.\footnote{Note that I interpreted ``1 month on each side of the discontinuity'' as $\pm$ 30 days (inclusive) on either side of the cutoff date; hence, the ``treated'' sample has 31 observations - the cutoff date and the 30 days on that side of the cutoff - and the ``untreated'' sample has 30 observations.}
+
+\subsubsection*{Part c}
+Because we are summing total NOx emissions to the daily level in 2005, there is only variation across days within each regression's 2-month sample window. Thus, OLS is computing an difference in means at the cutoff date after flexibly controlling for quadratic trends across the cutoff. This difference in means is unweighted and includes all observations in the 30 day window on either side of the cutoff. This seems reasonable since we are summing emissions across states and only using one year of data.
+
+The key identifying assumption in this design is continuity, which means that the expected potential outcomes are continuous at the cutoff. This assumption will fail if one or more of the determinants of NOx aside from the NBP (e.g., weather flucuations or economic activity) jumps discontinuously at the cutoff. In this case, our RD estimates will be biased.
+
+\section*{Problem 3}
+
+\subsubsection*{Part a}
+
+\begin{align}
+	Y_t = \beta_0 + \beta_1 D_t + \beta_2 \tilde{X}_t + \beta_3 \tilde{X}_t^2 + \beta_4 \tilde{X}_t \times 
+		D_t + \beta_5 \tilde{X}_t^2 \times D + \epsilon_t
+\end{align}
+
+\subsubsection*{Part b}
+Columns 3--4 of Table \ref{tab1} report the estimated effect of the NOx Budget Trading Program on NOx emissions using the spline RD. Using the May 1st (September 30th) cutoff, we find that the NBT led to a decline in total NOx emissions of roughly 1858.7 (2771.9) units in 2005.
+
+\section*{Problem 4}
+
+\section*{Problem 5}
+
+\section*{Problem 6}
+
+\section*{Problem 7}
+
+\section*{Problem 8}
+
+\section*{Problem 9}
+
+\section*{Problem 10}
+The consumer’s problem is
+\begin{align*}
+	\max_{X, f, a} u(X, f, s(c,a)) \text{ s.t. } I + p_w(T-f-s(c,a)) \geq X + p_a a,
+\end{align*}
+where $X$ is the numeraire good, $f$ is hours of leisure, and $s=s(c,a)$ is health as captured by the number of sick days, which depends on the ambient pollution concentration $c$ and defensive behavior $a$. The budget constraint is comprised of non-labor income, $I$, and labor income, $p_w(T-f-s(c,a))$. We can therefore write the Lagrangian as
+\begin{align*}
+	\mathcal{L} = u(X, f, s(c,a)) + \lambda(I + p_w(T-f-s(c,a)) - X + p_a a)
+\end{align*}
+with first-order conditions
+\begin{align}
+	\frac{\partial u}{\partial X} &= \lambda, \\
+	\frac{\partial u}{\partial f} &= \lambda p_w \\
+	\frac{\partial u}{\partial s} \frac{\partial s}{\partial a} &= \lambda \left[ \frac{\partial s}{\partial a} p_w + p_a  \right].
+\end{align}
+Recall that the marginal cost of the numeraire good, $X$ , is 1; the marginal cost of leisure, $f$, is $p_w$ (i.e., the hourly wage you give up by not working); and the marginal cost of defensive actions, $a$, is the direct cost, $p_a$, net of the saved costs from taking fewer sick days (i.e., the additional wages that can be earned from taking fewer sick days due to improved health) since $\partial s/\partial a < 0$. Moreover, recall that $\lambda$ is the ``shadow price,'' or the utility gain at the optimum of relaxing the budget constraint by one dollar. Therefore, each first-order condition says that the marginal utility of the good in question equals the shadow price times the marginal cost. In other words, the marginal utility of consuming one additional unit equals the marginal disutility of purchasing one additional unit.
+
+\section*{Problem 11}
+Assuming an interior solution as in the paper, we totally differentiate the health production function s = s(c, a) at the optimum $a^*$:
+\begin{align}
+	ds = \frac{\partial s}{\partial c} dc + \frac{\partial s}{\partial a} da^*.
+\end{align}
+Dividing through by $dc$, we get
+\begin{align}
+	\frac{ds}{dc} = \frac{\partial s}{\partial c} \frac{dc}{dc} + \frac{\partial s}{\partial a} \frac{da^*}{dc}.
+\end{align}
+Rearranging and simplifying, we get equation (2) from the paper:
+\begin{align} \label{eqn_dsdc}
+	\frac{\partial s}{\partial c} = \frac{ds}{dc} - \frac{\partial s}{\partial a} \frac{da^*}{dc}.
+\end{align}
+
+\section*{Problem 12}
+$\partial s/\partial c$ represents the partial effect of ambient pollution on health as measured by sick days, holding all else equal. $d s/ dc$ represents the total effect of ambient pollution concentration on health, which is the direct effect of pollution on health net of the mitigating effects of defensive behaviors.
+
+ $\partial s / \partial c$ is difficult to estimate both in an experimental and non-experimental setting. In an experimental setting, we would need to randomly expose some people to higher ambient pollution concentrations without allowing them to take defensive actions. This is both practically infeasible and highly unethical. In the non-experimental case, we would need data on all defensive investments according to the second RHS term in equation (\ref{eqn_dsdc}), which is typically more difficult to obtain than pollution or health data. $ds / dc$ is comparatively easier to estimate because observed health outcomes are already net of defensive behaviors people engage in.
+
+
+\section*{Problem 13}
+
+
+\section*{Problem 14}
+
+
+%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\section*{Figures}
+%%%%%%%%%%%%%%%%%%%%%
+
+\begin{figure}[h!]
+\centering
+\caption{Total Daily NOX Emissions in the NBP-Participating States}
+\includegraphics[width=0.99\textwidth]{Fig1.png}
+\caption*{\footnotesize{\emph{Notes:} Figure 1 shows average total daily NOx emissions in the NBP participating states in 2002 and 2005. These estimates are obtained from an OLS regression of NOx emissions on 6 day-of-week indicators and a constant. The values in the graph equal the constant plus the regression residuals, so that the graph depicts fitted values for the reference category (Wednesday). Total daily NOx emissions on Y-axis are measured in thousands of tons. The sample includes emissions from all the Acid Rain Units. NBP participating states include: Alabama, Connecticut, Delaware, District of Columbia, Illinois, Indiana, Kentucky, Maryland, Massachusetts, Michigan, Missouri, New Jersey, New York, North Carolina, Ohio, Pennsylvania, Rhode Island, South Carolina, Tennessee, Virginia, and West Virginia.}}
+\label{fig1}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Tables}
+
+\input{Table_RD_estimates.tex}
+
+%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Code}
+
+
+
+\end{document}
