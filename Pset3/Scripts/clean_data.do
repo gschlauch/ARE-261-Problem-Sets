@@ -1,7 +1,4 @@
 ********************************************************************************
-* ARE 261 Pset 1 - Joe's Half
-* Author: Gary Schlauch
-* Last updated: October 21, 2023
 * Purpose: clean the raw data
 ********************************************************************************
 
@@ -33,16 +30,18 @@ format date_stata %td
 gen year = year(date_stata)
 drop date
 
-* Create NBP binary indicator = 1 for NBP states and 0 otherwise
+* Create NBP binary indicator = 1 for NBP states and 0 otherwise. Note that I 
+* exclude Missouri from the list because the NBP did not begin operating there
+* until 2007 and the problem set is focused on 2002 vs 2005.
 gen nbp = 0 
-foreach stabv in AL CT DE DC IL IN KY MD MA MI MO NJ NY NC OH PA RI SC TN VA WV {
+foreach stabv in AL CT DE DC IL IN KY MD MA MI NJ NY NC OH PA RI SC TN VA WV {
 	qui replace nbp = 1 if state == "`stabv'"
 }
 
 * Create indicator for eastern states, excluding states that were excluded in
 * the paper
 gen east = nbp
-foreach stabv in AK GA HI IA ME MS NH VT WI  {
+foreach stabv in WI IA MO GA MS ME NH VT AK HI {
 	qui replace east = . if state == "`stabv'"
 }
 
