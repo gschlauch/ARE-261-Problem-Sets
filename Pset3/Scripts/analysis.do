@@ -74,7 +74,7 @@ gen runvar_minus_c2_sq = runvar_minus_c2^2
 forvalues i = 1/2 {
 	eststo: reghdfe nox_mass summer ///
 		runvar_minus_c`i' runvar_minus_c`i'_sq ///
-		if rdwindow_`i' == 1, noabs
+		if rdwindow_`i' == 1, noabs vce(robust)
 	if `i' == 1 {
 		estadd local cutoff "May 1"
 	}
@@ -103,7 +103,7 @@ cd "$dirpath_output\Tables"
 la var nox_mass "NOx"
 la var summer "1(NBP Operating)"
 
-local longnote "\emph{Notes}: The table dislpays estimates for the the effect of the NOx Budget Trading Program on average total daily NOx emissions. Columns 1--2 report the results using the polynomial regresion discontinuity, and Columns 3--4 report the results using the spline regression discontinuity. Columns 1 and 3 include the 30 days before and after May 1st in the sample, and Columns 2 and 4 include the 30 days before and after September 30th. Standard errors are in parentheses. * p<0.05, ** p<0.01, *** p<0.001"
+local longnote "\emph{Notes}: The table dislpays estimates for the the effect of the NOx Budget Trading Program on average total daily NOx emissions. Columns 1--2 report the results using the polynomial regresion discontinuity, and Columns 3--4 report the results using the spline regression discontinuity. Columns 1 and 3 include the 30 days before and after May 1st in the sample, and Columns 2 and 4 include the 30 days before and after September 30th. Robust errors are in parentheses. * p<0.05, ** p<0.01, *** p<0.001"
 
 esttab using "Table_RD_estimates.tex", replace ///
 	title("Polynomial and Spline RD estimates for the effect of the NBP on NOx emissions \label{tab1}") ///
@@ -128,7 +128,7 @@ gen month = month(date_stata)
 gen summer = inlist(month, 5, 6, 7, 8, 9)
 gcollapse (sum) nox_mass, by(date_stata summer)
 
-reghdfe nox_mass summer, noabs
+reghdfe nox_mass summer, noabs vce(robust)
 
 local var1 summer
 local b1 = _b[`var1']
@@ -144,7 +144,7 @@ gcollapse (sum) nox_mass, by(date_stata year summer)
 gen post = (year == 2005)
 gen summerXpost = summer * post
 
-reghdfe nox_mass summer post summerXpost, noabs
+reghdfe nox_mass summer post summerXpost, noabs vce(robust)
 
 local var2 summerXpost
 local b2 = _b[`var2']
@@ -160,7 +160,7 @@ gen summer = inlist(month, 5, 6, 7, 8, 9)
 gcollapse (sum) nox_mass, by(date_stata east summer)
 gen summerXeast = summer * east
 
-reghdfe nox_mass summer east summerXeast, noabs
+reghdfe nox_mass summer east summerXeast, noabs vce(robust)
 
 local var3 summerXeast
 local b3 = _b[`var3']
@@ -180,7 +180,7 @@ gen eastXpost = east*post
 gen summerXeastXpost = summer*east*post 
 
 reghdfe nox_mass summer post east summerXeast summerXpost ///
-	eastXpost summerXeastXpost, noabs
+	eastXpost summerXeastXpost, noabs vce(robust)
 	
 local var4 summerXeastXpost
 local b4 = _b[`var4']
@@ -255,7 +255,7 @@ file write myfile "\\" _n
 * End table
 file write myfile "\bottomrule" _n
 file write myfile "\end{tabular}" _n
-file write myfile "\caption*{\footnotesize \emph{Notes:} The table dislpays estimates for the the effect of the NOx Budget Trading Program on average total daily NOx emissions. Columns 1 reports the estimated coefficient of interest from the cross-sectional specification in Question 4. Column 2 the estimated coefficient of interest from the Pre vs Post DiD in Question 5. Column 3 reports the estimated coefficient of interest from the East vs West DiD in Question 6. Finally, Column 4 reports the estimated coefficient of interest from the triple-difference specification in Question 7. Standard errors are in parentheses. * p<0.05, ** p<0.01, *** p<0.001}" _n
+file write myfile "\caption*{\footnotesize \emph{Notes:} The table dislpays estimates for the the effect of the NOx Budget Trading Program on average total daily NOx emissions. Columns 1 reports the estimated coefficient of interest from the cross-sectional specification in Question 4. Column 2 the estimated coefficient of interest from the Pre vs Post DiD in Question 5. Column 3 reports the estimated coefficient of interest from the East vs West DiD in Question 6. Finally, Column 4 reports the estimated coefficient of interest from the triple-difference specification in Question 7. Robust errors are in parentheses. * p<0.05, ** p<0.01, *** p<0.001}" _n
 file write myfile "\label{table:CS_DiD}" _n
 file write myfile "\end{table}" _n
 if `own_file' == 1 {

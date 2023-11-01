@@ -11,6 +11,7 @@
 \usepackage{scrextend}
 \usepackage{amsfonts}
 \usepackage{mathrsfs}
+\usepackage{indentfirst}
 \usepackage{amsmath}
 \usepackage{amstext}
 \usepackage{amsthm}
@@ -140,90 +141,84 @@ Garrison Schlauch
 See the do-file "1_1_temperature_aggregation.do".
 
 \subsection{US Climate Impacts: County-Year Damages}
+See the do-file ``1_2_climate_impacts_regressions.do'' and R script ``create_figures_tables.R''.
 
 \subsubsection*{1.}
-Figure \ref{fig_climate_impacts_1} displays the linear relationship between log tranformed emp\_farm and the vector of binned temperature controls, including county and year fixed effects. The omitted temperature bin is 16-20$^o$C. Thus, the coefficient of roughly 0.0015 on the $>32^o$C bin can be interpreted as ``Relative to an additional 16-20$^o$C day during the year, an additional $>32^o$C day is associated with an increase in farm employment of roughly 0.15\%. The relationship is statistically significant at the 5\% level.''
+Figure \ref{fig_climate_impacts_1} displays the linear relationship between log tranformed emp\_farm and the vector of binned temperature controls, including county and year fixed effects. That is, it displays the estimates $\hat{\beta}$ obtained via OLS from the following regression on log farm employment in county $i$ and year $t$:\footnote{Note that $\log(emp\_farm)_{it}$ is missing for the 1,624 observations with $emp\_farm_{it}$ equal to zero. These 1,624 observations comprise roughly 1.26\% of the analysis sample.}
+\begin{align*}
+	\log(emp\_farm)_{it} = X_{it}' \beta + \alpha_i + \gamma_t + \epsilon_{it},
+\end{align*}
+The omitted temperature bin is 20-24$^o$C. Thus, the coefficient of roughly 0.0015 on the $>32^o$C bin can be interpreted as ``Relative to an additional 20-24$^o$C day during the year, an additional $>32^o$C day is associated with an increase in farm employment of roughly 0.15\%. The relationship is statistically significant at the 5\% level.''
 
 \subsubsection*{2.}
-COME BACK
-Figure \ref{fig_climate_impacts_2} displays the relationship between log(per capita farm prop income) using the restricted cubic spline, including county and year fixed effects.
+Figure \ref{fig_climate_impacts_2} displays the relationship between log(per capita farm prop income) and temperature using the restricted cubic spline, including county and year fixed effects. Unfortunately, I did not have time to plot the marginal effects in Stata, where the marginal effects are the partial derivative of the log(per capita farm prop income) with respect to the average temperature within a given county.
 
 \subsubsection*{3.}
-Table \ref{table_climate_impacts_3} displays the results of using the binned temperature estimator to design a test for whether we observe treatment effect heterogeneity. Specifically, the number of $>32^o$C days is interacted with the respective temperature bins. As in Exercise 1.1, the omitted bin is 16-20$^o$C. While the majority of the coefficients on the interaction terms are not statistically significant at the 5\% level, the coefficients on``tempB0 $\times$ tempA32'' and ``temp4to8 $\times$ tempA32'' are statistically significant at the 5\% level. Conducting an F-test on the interaction terms jointly equalling zero yields an F-statistic of roughly 13; hence, we can reject the null hypothesis of no treatment effect heterogeneity.
+Table \ref{table_climate_impacts_3} displays the results of using the binned temperature estimator to design a test for whether we observe treatment effect heterogeneity. Specifically, I add interactions for the number of $>32^o$C days with the respective temperature bins. As in Exercise 1.1, the omitted bin is 20-24$^o$C. While the majority of the estimated coefficients on the interaction terms are not statistically significant at the 5\% level, the coefficients on \texttt{tempB0 $\times$ tempA32} and \texttt{temp4to8 $\times$ tempA32} are statistically significant at the 5\% level. Conducting an F-test on the interaction terms jointly equalling zero yields an F-statistic of roughly 13; hence, we can reject the null hypothesis of no treatment effect heterogeneity.
 
 \clearpage
 
 \section{Hedonic Air Quality Analysis}
-
-Note: to maintain the same  sample throughout the questions in this section, I dropped the 47 observations that were missing any of the variables included in the dataset, leaving me with 966 observations. All 
-
-\subsection{Questions}
+See the do-file ``2_hedonic_air_quality_analysis.do'' and R script ``create_figures_tables.R''. To maintain the same sample throughout the questions in this section, I drop the 46 observations that were missing any of the variables included in the analysis, leaving me with 967 observations. Unless stated otherwise, ``controls'' refers to all ``other relevant variables'' listed in the data notes, including the three economic shock variables references in problem 1.
 
 \subsubsection*{1.}
-\begin{itemize}
-\item Table \ref{hedonic_1_1} displays the estimates of regressing housing prices on pollution levels with (Column 2) and without (Column 1) controls. 
-\item Without controls, my estimates imply that a unit increase in the change in the annual geometric mean of total suspended particulates pollution (TSPs) from 1969-72 to 1977-80 is associated with roughly a 0.24\% increase in housing values from 1970 to 1980 (statistically sig. at 5\%). 
-\item However, the point estimate is reduced by almost an order of magnitude after controlling for other housing price determinants and is no longer statistically significant. This implies that the regression without controls suffers from omitted variables bias, where the change in pollution is correlated with other housing price determinants. 
-\item To confirm this, I regress dgtsp on the observable measures of economic shocks: dincome, dunemp, dmnfcg (Table \ref{hedonic_1_2}) as well as compute simple correlations between dgtsp and these three variables. Indeed, increases in income and manufacturing employment are positively correlated with increases in TSPs while increases in unemployment are negatively correlated with increases in TSPs. 
-\item From Table \ref{hedonic_1_1}, these three covariates have a nonzero relationship with housing prices. Thus, the regression without controls suffers from omitted variables bias since dgtsp is correlated with omitted determinants of housing prices.
-\end{itemize}
+
+Columns 1 and 2 of Table \ref{hedonic_1} displays the estimates obtained via OLS from regressing housing prices on pollution levels with and without controls. Without controls, my estimates imply that a one unit increase in the change in the annual geometric mean of total suspended particulates pollution (TSPs) from 1969-72 to 1977-80 is associated with roughly a 0.26\% increase in housing values from 1970 to 1980 (statistically sig. at 5\%). However, the point estimate is reduced by almost an order of magnitude after controlling for other housing price determinants and economic shocks and is no longer statistically significant at conventional levels. This difference implies that the regression without controls suffers from omitted variables bias, where the change in pollution is correlated with other housing price determinants. 
+
+There are many potential omitted variables biases stories that can be told here. For instance, increases in  income could be positively correlated with increases in pollution if the former is pollution and economic activity are positively correlated. Increases in per-capita income are also likely linked to increases in housing values. Indeed, I find in the data that both sets of simple correlations - pollution and income, and housing values and income - are positive. These relationships are also positive (and statistically significant at the 5\% level) when controlling for the other two economic shocks listed above (Columns 3 and 4 of Table \ref{hedonic_1}), although the point estimates are close to zero.
 
 \subsubsection*{2.}
-For mid-decade regulatory status (tsp7576) to be a valid instrument for pollution changes when the outcome of interest is housing price changes, it must satisfy two criteria:
+Two main assumptions must be satisfied for mid-decade regulatory status \texttt{tsp7576} to be a valid instrument for pollution changes \texttt{dgtsp}:
 \begin{enumerate}
-\item Relevance: tsp7576 must be correlated with the determinant of interest, dgtsp. This can be seen in Column 1 of Table \ref{hedonic_2}.
-\item Exclusion: tsp7576 is uncorrelated with the error term, or other variables that determine housing prices. Looking at the coefficients on the economic shock measures dincome, dunemp, dmnfcg in Column 2 of Table \ref{hedonic_2}, dincome is statistically significantly related to tsp7576 at the 5\% level, while dunemp and dmnfcg are not. While we are able to control for dincome in our regression, this finding is not reassuring that there are no unobserved factors in the error term that are correlated with our instrument and the outcome of interest.
+\item Relevance condition: the instrument must be correlated with the endogenous variable of interest, conditional on the other covariates. This assumption can be checked in the first-stage regression of 2SLS, the results of which are reported in the next section.
+\item Exclusion restriction: the instrument is uncorrelated with the error term, conditional on the other covariates. While this assumption is intrinsically impossible to check, we can assess its plausibility by investigating whether the instrument is correlated with other observed determinants of the outcome of interest (log housing prices). Looking at the coefficients on the economic shock measures in Column 2 of Table \ref{hedonic_2}, \texttt{dincome} is statistically significantly related to \texttt{tsp7576} at the 5\% level while \texttt{dunemp} and \texttt{dmnfcg} are not. Although we are able to control for dincome in our regression, this finding is not reassuring that there are no unobserved determinants of the outcome of interest that are correlated with the instrument.
 \end{enumerate}
 
 \subsubsection*{3.}
-Table \ref{hedonic_3} displays the results for this problem.
-\begin{itemize}
-\item Columns 1 and 2 display the first-stage relationship between regulation and air pollution changes without and with controls, respectively. Both with and without controls, the first stage relationship appears to be strong (i.e., EPA regulation appears to be a strong and statistically significant predictor of air pollution changes), though is slightly attenuated when including the controls. Interpreting our findings without (with) controls in Column 1 (Column 2), counties that were regulated in either 1975 or 1976 experienced a roughly 10.2 (8.14) unit reduction in the annual geometric mean of TSPs from 1969-72 to 1977-80 compared to counties that were not regulated (holding fixed other covariates in the regression).
+Table \ref{hedonic_3} displays the results for this problem. Columns 1 and 2 display the first-stage relationship between regulation and air pollution changes without and with controls, respectively. Both with and without controls, the first stage relationship appears to be strong (i.e., EPA regulation appears to be a strong and statistically significant predictor of air pollution changes), though is slightly attenuated when including the controls. Interpreting our findings without (with) controls in Column 1 (Column 2), counties that were regulated in either 1975 or 1976 experienced a roughly 9.84 (8.05) unit reduction in the annual geometric mean of TSPs from 1969-72 to 1977-80 compared to counties that were not regulated (holding fixed the other covariates in the regression).
 
-\item Columns 3 and 4 of Table \ref{hedonic_3} display the reduced form relationship between regulation and housing price changes without and with controls, respectively. Both coefficients are similar in magnitude and are statistically significant at the 5\% level. Interpreting our findings without (with) controls in Column 3 (Column 4), counties that were regulated in either 1975 or 1976 experienced a roughly 3.46\% (3.70\%) increase in housing values from 1970 to 1980 compared to counties that were not regulated (holding fixed other covariates in the regression).
+Columns 3 and 4 display the reduced form relationship between regulation and housing price changes without and with controls, respectively. Both coefficients are similar in magnitude and are statistically significant at the 5\% level. Interpreting our findings without (with) controls in Column 3 (Column 4), counties that were regulated in either 1975 or 1976 experienced a roughly 4.45\% (3.96\%) increase in housing values from 1970 to 1980 compared to counties that were not regulated (holding fixed the other covariates in the regression).
 
-\item Columns 5 and 6 of Table \ref{hedonic_3} display the 2SLS relationship between air pollution changes and housing price changes without and with controls, respectively. The 2SLS estimates can be obtained by dividing the reduced form coefficients by the first stage coefficients. Both coefficients are similar in magnitude and are statistically significant at the 5\% level. Interpreting our findings without (with) controls in Column 5 (Column 6), a 1 unit increase in TSPs from 1969-72 to 1977-80 is associated with roughly a 0.34\% (0.45\%) decrease in housing values from 1970 to 1980 (holding fixed other covariates in the regression). Assuming the IV assumptions are met, these estimates reflect the local average treatment effect, or the average treatment effect for the subset of counties whose air pollution changed as a result of EPA regulation.
-\end{itemize}
+Columns 5 and 6 display the 2SLS relationship between air pollution changes and housing price changes without and with controls, respectively. The 2SLS point estimates can be obtained by dividing the reduced form coefficient estimates by the first stage coefficient estimates. Both coefficients are similar in magnitude and are statistically significant at the 5\% level. Interpreting our findings without (with) controls in Column 5 (Column 6), a 1 unit increase in TSPs from 1969-72 to 1977-80 is associated with roughly a 0.45\% (0.49\%) decrease in housing values from 1970 to 1980 (holding fixed the other covariates in the regression). Assuming the IV assumptions are met, these estimates reflect the local average treatment effect (LATE), or the average treatment effect for the subset of counties whose air pollution changed as a result of EPA regulation. If we had homogeneous treatment effects, then the LATE would equal the average treatment effect (ATE) by definition.
 
 \subsubsection*{4.}
-Table \ref{hedonic_4} displays the results for this problem.
+Table \ref{hedonic_4} displays the results for this problem. All of the following results (first stage, second stage, reduced form) have the same sign as those obtained in the previous part.
 
-\begin{itemize}
-\item Columns 1 and 2 display the first-stage relationship between regulation (as defined by the annual geometric mean of TSPs in 1974 being greater than 75 units) and air pollution changes without and with controls, respectively. Both with and without controls, the first stage relationship appears to be strong, though is slightly attenuated when including the controls. Interpreting our findings without (with) controls in Column 1 (Column 2), counties with annual geometric mean of TSPs above 75 units in 1974 experienced a roughly 13.15 (10.35) unit reduction in the annual geometric mean of TSPs from 1969-72 to 1977-80 compared to counties with annual geometric mean of TSPs below 75 units in 1974 (holding fixed other covariates in the regression).
+Columns 1 and 2 display the first-stage relationship between the annual geometric mean of TSPs in 1974, \texttt{mtspgm74}, and air pollution changes, \texttt{dgtsp}, without and with controls, respectively. In both specifications, the first stage relationship appears to be strong, though is slightly attenuated when including the controls. Interpreting our findings without (with) controls, a one unit increase in annual geometric mean of TSPs in 1974 is associated with roughly 0.27 (0.24) unit reduction in the annual geometric mean of TSPs from 1969-72 to 1977-80 (holding fixed the other covariates in the regression).
 
-\item Columns 3 and 4 of Table \ref{hedonic_3} display the reduced form relationship between our new instrumental variable and housing price changes without and with controls, respectively. Both point estimates are significant at the 5\% level, and the point estimate increases by over 50\% after including controls. Interpreting our findings without (with) controls in Column 3 (Column 4), counties with annual geometric mean of TSPs above 75 units in 1974 experienced a roughly 3.12\% (4.98\%) increase in housing values from 1970 to 1980 compared to counties with annual geometric mean of TSPs below 75 units in 1974 (holding fixed other covariates in the regression).
+Columns 3 and 4 display the reduced form relationship between our new instrumental variable and housing price changes without and with controls, respectively. The two estimates are nearly identical, though only the one with controls is statistically significant at the 5\% level. Interpreting our findings without (with) controls, a one unit increase in annual geometric mean of TSPs in 1974 is associated with roughly 0.12\% (0.12\%) increase in housing values from 1970 to 1980 (holding fixed the other covariates in the regression).
 
-\item Columns 5 and 6 of Table \ref{hedonic_3} display the 2SLS relationship between air pollution changes and housing price changes without and with controls, respectively. As in the reduced form relationship, both point estimates are statistic ally significant at the 5\% level, and the point estimate with controls is larger in magnitude (roughly double) than the point estimate without controls. Interpreting our findings without (with) controls in Column 5 (Column 6), a 1 unit increase in TSPs from 1969-72 to 1977-80 is associated with roughly a 0.24\% (0.48\%) decrease in housing values from 1970 to 1980 (holding fixed other covariates in the regression). These results are similar to those obtained in the previous part.
-\end{itemize}
+Columns 5 and 6 display the 2SLS relationship between air pollution changes and housing price changes without and with controls, respectively. As in the reduced form relationship, both point estimates are very similar, though only the one with controls is statistically significant at the 5\% level. Interpreting our findings without (with), a one unit increase in TSPs from 1969-72 to 1977-80 is associated with roughly a 0.46\% (0.51\%) decrease in housing values from 1970 to 1980 (holding fixed the other covariates in the regression).
 
 \subsubsection*{5.}
-COME BACK
-\begin{itemize}
-\item Using this discontinuity in treatment assignment, we could derive an alternate estimator using a regression discontinuity design. The key assumption in this design is continuity, which means that the expected potential outcomes are continuous at the cutoff. In both cases, the RD design estimates the impacts of eligibility for EPA regulation at the 75 unit 1974 TSPs cutoff.
-\item Figure \ref{fig_lowess5_pollution} plots the results of estimating the nonparametric bivariate relationship between pollution changes and 1974 TSPs levels and housing price changes and 1974 TSPs levels using a bandwidth of 2. The LATE estimate at the 75 unit TSPs cutoff is the vertical distance between the right-hand (red) and left-hand (blue) lines. Comparing this estimate to the first-stage estimate in part (4), 
-\item Figure \ref{fig_lowess5_house} plots the results of estimating the nonparametric bivariate relationship between housing price changes and 1974 TSPs levels using a bandwidth of 2. The LATE estimate at the 75 unit TSPs cutoff is the vertical distance between the right-hand (red) and left-hand (blue) lines.
-\end{itemize}
+Using this discontinuity in treatment assignment, we could derive an alternate estimator using a fuzzy RDD, where the probability of a county being regulated jumps discontinuously at the 75 unit cutoff value of 1974 TSPs. The reason we cannot use a sharp RDD is because of imperfect compliance with treatment assignment at the cutoff (i.e., some counties that are below the cutoff value are nevertheless regulated). The key identifying assumption in this design is continuity, which means that the expected potential outcomes are continuous at the cutoff. 
 
+There are a few ways this identifying assumption can fail. First, if counties were able to anticipate the regulation and able to manipulate their 1974 TSPs levels to fall just below the cutoff, this bunching behavior would mean that counties just on either side of the cutoff value may not have the same potential outcomes. Another way this assumption could fail is if one or more of the other determinants of housing prices jumped discontinuously at the cutoff.
 
+Figure \ref{fig_lowess5} plots the results of estimating the nonparametric bivariate relationship between pollution changes and 1974 TSPs levels and housing price changes and 1974 TSPs levels using a bandwidth of 0.8 in the Stata \texttt{lowess} command. The LATE estimate here is the ratio between (i) the vertical distance between the two lines at the cutoff value in bottom panel, and (ii) the vertical distance between the two lines at the cutoff value in the top panel. This is similar to dividing the reduced form coefficient by the first-stage coefficient in a typical 2SLS regression.
 
+Contrary to part 4, the top panel of Figure \ref{fig_lowess5} shows that increases in the probability of regulation for counties near the TSPs cutoff are associated with increases in pollution from 1969--72 to 1977--80. Also contrary to part 4, the bottom panel of Figure \ref{fig_lowess5} shows that increases in the probability of regulation for counties near the TSPs cutoff are associated with decreases in housing values from 1970 to 1980. These magnitudes are relatively small however, and might not be statistically significant if I were to estimate these relationships in a more formal way. However, when we divide the two vertical distances at the cutoff value as described above, we obtain a LATE estimate for the effect of pollution on housing values that has the same sign as the LATE estimate in part 4.
 
 
 \subsubsection*{6.}
-COME BACK
-Figure \ref{fig_lowess6} plots (i) the nonparametric bivariate relation between the single-index measure of the housing price changes predicted to occur due to other variables changing and 1974 TSPs levels against (ii) the smoothed housing price changes from (5). Since the former lowess smoother shows a relatively smooth and continuous relationship between the predicted house price changes and 1974 TSPs without any significant jumps or discontinuities around the 75 unit threshold, this suggests that the continuity condition required by RDD is likely met.
+Figure \ref{fig_lowess6} plots (i) the nonparametric bivariate relation between the single-index measure of the housing price changes predicted to occur due to other variables changing and 1974 TSPs levels (red line) against (ii) the smoothed housing price changes from part 5 (blue line). If the continuity assumptions held, we would expect the index to be smooth around our cutoff value (i.e., not jump discontinuously) since it is constructed from our controls. Because the red line does jump discontinuously at the cutoff in a similar magnitude to jump in the blue line, this suggests that our continuity assumptions may not hold here.
 
 \subsubsection*{7.}
-COME BACK
-Figure \ref{lowess_7_dgtsp} and \ref{lowess_7_dlhouse}
+Figure \ref{fig_lowess7} plots the results for this problem. These plots suggest different effects than the plots in Figure \ref{fig_lowess5}. That is, the plots in Figure \ref{fig_lowess7} show that for counties near the cutoff, regulation is associated with a decrease in pollution values and increase in housing values. These effects match the signs of our estimates in part 4 and match the broader story that regulation decreased pollution and subsequently increased housing values for counties below the pollution cutoff.
 
 \subsubsection*{8.}
-In general, two-stage least squares only recovers the LATE, or the ATE for the subpopulation whose treatment status is influenced by the instrumental variables (i.e., the compliers). This effect is identified under our usual IV assumptions of the exclusion restriction and a non-zero first stage. When one uses EPA regulation as an instrumental variable for air pollution, the LATE estimates how housing values are affected by changes in air pollution that occur only because of the changes in EPA regulation. %Compliers in this setting are those who experience a change in air pollution levels specifically because of the EPA regulation.
-
-
+In general, 2SLS only recovers the LATE, or the ATE for the subpopulation whose treatment status is influenced by the instrumental variables (i.e., the compliers). This effect is identified under our usual IV assumptions of the exclusion restriction and a non-zero first stage. When one uses EPA regulation as an instrumental variable for air pollution, the LATE estimates reflect how housing values are impacted by changes in air pollution that occur because of the changes in EPA regulation. 
 
 
 \subsubsection*{9.}
-COME BACK
+There are three key takeaways from the preceding analysis. First, the OLS estimates of the relationship between TSPs and housing values likely suffer from omitted variables bias and selection bias. These estimates say that increases in pollution increase housing values \emph{ceteris paribus}, which is the opposite of what we would expect. 
+
+Second, the 2SLS estimates are consistent with our priors - regulation decreases TSPs and, through this channel, increases housing values \emph{ceteris paribus}. The 2SLS estimates in parts 3 and 4 are also very similar in magnitude to one another despite using different instruments for changes in pollution. This may give us more confidence in the exclusion restriction holding, although we can never be certain. For instance, regulation may not affect housing values solely through the pollution channel if it also results in the economic displacement of firms or home buyers. 
+
+Lastly, the RD estimates for the local average treatment effect of changes in TSPs on changes in housing values are the same sign as our IV estimates. However, only the RD estimates in part 7 produces reduced form and first-stage estimates that have the same sign as our IV estimates. The estimates in part 7 are perhaps more plausible than those in part 5 since we are not relying on the continuity assumption holding across the cutoff value. Regulation is also perhaps more plausibly exogenous below the cutoff value since, conditional on mean TSPs in 1974, counties that were vs were not regulated only differed in whether their 2nd highest daily concentration above 260 units in 1974.
+
+Because these are hedonic regressions, we can interpret them as saying that people positively value lower levels of TSPs insofar as those values are reflected in housing prices. In other words, people have a positive WTP to live in less areas with lower levels of TSPs. It is important to keep in mind, however, that without assuming homogeneous treatment effects, our IV and RD estimates reflect \emph{local} average treatment effects, not average treatment effects. This means that the estimates are driven by compliers, or the population of counties for which regulation induces changes in pollution levels. To the extent that there is substantial heterogeneity in the population, these estimates may not be representative of WTP for air quality in other settings. Moreover, TSPs are not the only class of pollutant, and these estimates are therefore not reflective of overall WTP for reductions in air pollution.
+
 
 \clearpage
 
@@ -236,7 +231,7 @@ COME BACK
 \centering
 \caption{Exercise 1.2.1}
 \includegraphics[width=0.99\textwidth]{Climate_Impacts_Fig1.png}
-\caption*{The solid black line shows the point estimates of the regression specified in the problem. Gray shaded areas display 95\% confidence intervals.}
+\caption*{The solid black line shows the point estimates of the regression specified in the problem. Gray shaded areas display 95\% confidence intervals obtained using robust standard errors.}
 \label{fig_climate_impacts_1}
 \end{figure}
 
@@ -245,7 +240,7 @@ COME BACK
 \centering
 \caption{Exercise 1.2.2}
 \includegraphics[width=0.99\textwidth]{Climate_Impacts_Fig2.png}
-\caption*{The solid black line shows the point estimates of the regression specified in the problem. Gray shaded areas display 95\% confidence intervals.}
+\caption*{The solid black line shows the point estimates of the regression specified in the problem. Gray shaded areas display 95\% confidence intervals obtained using robust standard errors.}
 \label{fig_climate_impacts_2}
 \end{figure}
 
@@ -253,55 +248,29 @@ COME BACK
 
 \begin{figure}[h!]
 \centering
-\caption{Exercise 2.5, TSPs changes and 1974 TSPs levels}
-\includegraphics[width=0.85\textwidth]{lowess_5_dgtsp_bwidth2.png}
-\includegraphics[width=0.85\textwidth]{lowess_5_dgtsp_bwidth3.png}
-\includegraphics[width=0.85\textwidth]{lowess_5_dgtsp_bwidth4.png}
-\label{fig_lowess5_house}
+\caption{Exercise 2.5, TSPs changes (top) and housing price changes (bottom) versus 1974 TSPs levels}
+\includegraphics[width=0.85\textwidth]{lowess_5_dgtsp_bwidth8.png}
+\includegraphics[width=0.85\textwidth]{lowess_5_dlhouse_bwidth8.png}
+\label{fig_lowess5}
 \end{figure}
 
 \clearpage
 
 \begin{figure}[h!]
 \centering
-\caption{Exercise 2.5, housing price changes and 1974 TSPs levels}
-\includegraphics[width=0.85\textwidth]{lowess_5_dlhouse_bwidth2.png}
-\includegraphics[width=0.85\textwidth]{lowess_5_dlhouse_bwidth3.png}
-\includegraphics[width=0.85\textwidth]{lowess_5_dlhouse_bwidth4.png}
-\label{fig_lowess5_house}
+\caption{Exercise 2.6, TSPs changes and 1974 TSPs levels}
+\includegraphics[width=0.99\textwidth]{lowess_6_bwidth8.png}
+\label{fig_lowess6}
 \end{figure}
 
 \clearpage
 
 \begin{figure}[h!]
 \centering
-\caption{Exercise 2.5, housing price changes and 1974 TSPs levels}
-\includegraphics[width=0.85\textwidth]{lowess_6_bwidth2.png}
-\includegraphics[width=0.85\textwidth]{lowess_6_bwidth3.png}
-\includegraphics[width=0.85\textwidth]{lowess_6_bwidth4.png}
-\label{fig_lowess6_house}
-\end{figure}
-
-\clearpage
-
-\begin{figure}[h!]
-\centering
-\caption{Exercise 2.7, pollution}
-\includegraphics[width=0.85\textwidth]{lowess_7_dgtsp_bwidth7.png}
+\caption{Exercise 2.7, TSPs changes (top) and housing price changes (bottom) versus 1974 TSPs levels}
 \includegraphics[width=0.85\textwidth]{lowess_7_dgtsp_bwidth8.png}
-\includegraphics[width=0.85\textwidth]{lowess_7_dgtsp_bwidth9.png}
-\label{lowess_7_dgtsp}
-\end{figure}
-
-\clearpage
-
-\begin{figure}[h!]
-\centering
-\caption{Exercise 2.7, house}
-\includegraphics[width=0.85\textwidth]{lowess_7_dlhouse_bwidth7.png}
 \includegraphics[width=0.85\textwidth]{lowess_7_dlhouse_bwidth8.png}
-\includegraphics[width=0.85\textwidth]{lowess_7_dlhouse_bwidth9.png}
-\label{lowess_7_dlhouse}
+\label{fig_lowess7}
 \end{figure}
 
 
@@ -315,11 +284,7 @@ COME BACK
 
 \clearpage
 
-\input{hedonic_1_1.tex}
-
-\clearpage
-
-\input{hedonic_1_2.tex}
+\input{hedonic_1.tex}
 
 \clearpage
 

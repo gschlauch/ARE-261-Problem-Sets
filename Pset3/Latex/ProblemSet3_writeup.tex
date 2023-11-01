@@ -173,12 +173,14 @@ The econometric equation is
 where $Y_d$ is the total daily NOx emissions (in tons) on day-of-year $d$ in 2005, $\text{Summer}_d$ is an indicator equal to one for days between May 1st and September 30th (the ozone season), $\tilde{X}_d = \gamma_d - c$, where $\gamma_d$ is the day of the year and $c$ is the cutoff date - either May 1st or September 30th. The coefficient of interest, $\beta_1$, represents the estimated effect of the NOx Budget Trading Program on NOx emissions at the cutoff date.
 
 \subsubsection*{Part b}
-Columns 1--2 of Table \ref{tab1} report the estimated effect of the NOx Budget Trading Program on NOx emissions using the polynomial RD. Using the May 1st (September 30th) cutoff, I find that the NBP led to an average decline in total NOx emissions of 2069.498 (2528.294) tons in 2005 across states participating in the NBP.\footnote{Note that I interpreted ``1 month on each side of the discontinuity'' as $\pm$ 30 days (inclusive) on either side of the cutoff date; hence, the ``treated'' sample has 31 observations - the cutoff date and the 30 days on that side of the cutoff - and the ``untreated'' sample has 30 observations.}
+Columns 1--2 of Table \ref{tab1} report the estimated effect of the NOx Budget Trading Program on NOx emissions using the polynomial RD. Using the May 1st (September 30th) cutoff, I find that the NBP led to an average decline in total NOx emissions of 2069.498 (2528.294) tons in 2005 from states participating in the NBP.\footnote{I interpreted ``1 month on each side of the discontinuity'' as $\pm$ 30 days (inclusive) on either side of the cutoff date.} These estimates are statistically significant at the 1\% level.
 
 \subsubsection*{Part c}
-Because we are summing total NOx emissions to the daily level in 2005, there is only variation across days within each regression's 2-month sample window. Thus, OLS is computing a difference in means at the cutoff date after flexibly controlling for quadratic trends across the sample period. This difference in means is unweighted and includes all observations in the 30 day window on either side of the cutoff. That is, we are using a triangular kernel. This seems reasonable since we are summing emissions across states and only using one year of data. Should we desire, we could explore alternate kernel types (e.g,. triangular) to test the robustness of our specification.
+Because we are summing total NOx emissions to the daily level in 2005, there is only variation across days within each regression's 2-month sample window. Thus, OLS is computing a difference in means at the cutoff date after flexibly controlling for quadratic trends across the sample period. This difference in means is unweighted and includes all observations in the 30 day window on either side of the cutoff. That is, we are using a rectangular kernel. This seems reasonable since we are summing emissions across states and only using one year of data. Should we desire, we could explore alternate kernel types (e.g,. triangular) to test the robustness of our specification.
 
-The key identifying assumption in this design is continuity, which means that the expected potential outcomes are continuous at the cutoff. This assumption will fail if one or more of the determinants of NOx aside from the NBP (e.g., weather flucuations or economic activity) jumps discontinuously at the cutoff. Note that our RD estimates will be biased if the continuity assumption is not satisfied.
+The key identifying assumption in this design is continuity, which means that the expected potential outcomes are continuous at the cutoff. This assumption will fail if one or more of the determinants of NOx aside from the NBP (e.g., weather flucuations or economic activity) jumps discontinuously at the cutoff. Our RD estimates will be biased if the continuity assumption is not satisfied.
+
+Lastly, I use heteroskedasticity robust standard errors to obtain unbiased standard errors of the OLS coefficients under heteroscedasticity.
 
 \section*{Problem 3}
 
@@ -191,7 +193,7 @@ The key identifying assumption in this design is continuity, which means that th
 where $\text{Summer}_d$ and $ \tilde{X}_d$ are defined as before.
 
 \subsubsection*{Part b}
-Columns 3--4 of Table \ref{tab1} report the estimated effect of the NOx Budget Trading Program on NOx emissions using the spline RD. Using the May 1st (September 30th) cutoff, I find that the NBP led to a decline in total NOx emissions of roughly 1835.393 (2701.130) tons in 2005 across states participating in the NBP.
+Columns 3--4 of Table \ref{tab1} report the estimated effect of the NOx Budget Trading Program on NOx emissions using the spline RD. Using the May 1st (September 30th) cutoff, I find that the NBP led to a decline in total NOx emissions of roughly 1835.393 (2701.130) tons in 2005 from states participating in the NBP. These estimates are statistically significant at the 1\% level.
 
 \section*{Problem 4}
 
@@ -200,7 +202,7 @@ The econometric equation is
 \begin{align}
 	Y_d = \beta_0 + \beta_1 \text{Summer}_d + \epsilon_d,
 \end{align}
-where $Y_{d}$ is total daily NOx emissions (in tons) on day-of-year $d$ in 2005, $\text{Summer}_d$ is defined as before, and $\epsilon_d$ is an error term. The coefficient of interest, $\beta_1$, represents the difference in 2005 average total daily NOx emissions in the summer versus the winter across NBP participating states. That is, $\hat{\beta}_1 = (\bar{Y}_{\text{Summer}=1} - \bar{Y}_{\text{Summer}=0})$.
+where $Y_{d}$ is total daily NOx emissions (in tons) on day-of-year $d$ in 2005, $\text{Summer}_d$ is defined as before, and $\epsilon_d$ is an error term. The coefficient of interest, $\beta_1$, represents the difference in 2005 average total daily NOx emissions in the summer versus the winter from NBP participating states. That is, $\hat{\beta}_1 = (\bar{Y}_{\text{Summer}} - \bar{Y}_{\text{Winter}})$.
 
 \subsubsection*{Part b}
 Using this cross-sectional estimator in 2005, I estimate that the NBP reduced total daily summer NOx emissions in 2005 by an average of 3097.434 tons (Column 1, Table \ref{table:CS_DiD}). This estimate is statistically significant at the 1\% level.
@@ -212,9 +214,9 @@ The econometric equation is
 \begin{align}
 	Y_{dt} = \beta_0 + \beta_1 \text{Summer}_d + \beta _2\text{Post}_t + \beta_3 \text{Summer}_d \times \text{Post}_t + \epsilon_{dt},
 \end{align}
-where $Y_{dt}$ is total daily NOx emissions (in tons) on day of year $d$ and year $t$, $\text{Summer}_d$ is defined as before, $\text{Post}_t$ is a binary indicator equal to one for the year 2005 and zero for the year 2002, and $\epsilon_{dt}$ is an error term. The coefficient of interest, $\beta_3$, represents the difference in average total daily NOx emissions in the summer vs winter and before vs after the NBP went into effect across NBP participating states. That is, 
+where $Y_{dt}$ is total daily NOx emissions (in tons) on day of year $d$ and year $t$, $\text{Summer}_d$ is defined as before, $\text{Post}_t$ is a binary indicator equal to one for the year 2005 and zero for the year 2002, and $\epsilon_{dt}$ is an error term. The coefficient of interest, $\beta_3$, represents the difference in average total daily NOx emissions in the summer vs winter and before vs after the NBP went into effect in NBP participating states. That is, 
 \begin{align*}
-	\hat{\beta}_3 = (\bar{Y}_{\text{Summer}=1, \text{Post} = 1} -  \bar{Y}_{\text{Summer}=0, \text{Post} = 1}) - (\bar{Y}_{\text{Summer}=1, \text{Post} = 0} - \bar{Y}_{\text{Summer}=0, \text{Post} = 0}).
+	\hat{\beta}_3 = (\bar{Y}_{\text{Summer}, \text{Post}} -  \bar{Y}_{\text{Winter}, \text{Post}}) - (\bar{Y}_{\text{Summer}, \text{Pre}} - \bar{Y}_{\text{Winter}, \text{Pre}}).
 \end{align*}
 
 \subsubsection*{Part b}
@@ -227,9 +229,9 @@ The econometric equation is
 \begin{align}
 	Y_{id} = \beta_0 + \beta_1 \text{Summer}_d + \beta _2 \text{East}_i + \beta_3 \text{Summer}_d \times \text{East}_i + \epsilon_{id},
 \end{align}
-where $Y_{id}$ is total daily NOx emissions (in tons) in region $i$ (East vs West) on day-of-year $d$, $\text{Summer}_d$ is defined as before, $\text{East}_i$ is a binary indicator equalling one for Eastern states participating in the NBP and zero for Western states, and $\epsilon_{id}$ is an error term. The coefficient of interest, $\beta_3$, represents the difference in 2005 average total daily NOx emissions in the summer vs winter and in the East vs West.\footnote{Following the main analysis of the paper, I exclude Wisconsin, Iowa, Missouri, Georgia, Mississippi, Maine, New Hampshire, and Vermont from the regression sample. Per our email correspondence, I also exclude Alaska and Hawaii.} That is,
+where $Y_{id}$ is total daily NOx emissions (in tons) in region $i$ (East vs West) on day-of-year $d$, $\text{Summer}_d$ is defined as before, $\text{East}_i$ is a binary indicator equalling one for Eastern states participating in the NBP and zero for Western states, and $\epsilon_{id}$ is an error term. The coefficient of interest, $\beta_3$, represents the difference in 2005 average total daily NOx emissions in the summer vs winter and in the East vs West.\footnote{Following the main analysis of the paper, I exclude Wisconsin, Iowa, Missouri, Georgia, Mississippi, Maine, New Hampshire, and Vermont from the regression sample.} That is,
 \begin{align*}
-	\hat{\beta}_3 = (\bar{Y}_{\text{Summer}=1, \text{East} = 1} -  \bar{Y}_{\text{Summer}=0, \text{East} = 1}) - (\bar{Y}_{\text{Summer}=1, \text{East} = 0} - \bar{Y}_{\text{Summer}=0, \text{East} = 0}).
+	\hat{\beta}_3 = (\bar{Y}_{\text{Summer}, \text{East}} -  \bar{Y}_{\text{Winter}, \text{East}}) - (\bar{Y}_{\text{Summer}, \text{West}} - \bar{Y}_{\text{Winter}, \text{West}}).
 \end{align*}
 
 \subsubsection*{Part b}
@@ -244,21 +246,42 @@ The econometric equation is
 	& \quad  + \beta_6 \text{East}_i \times \text{Post}_t + \beta_7 \text{Summer}_d \times  \text{East}_i \times  \text{Post}_t + \epsilon_{idt},
 \end{align}
 where $Y_{idt}$ is total NOx emissions (in tons) in region $i$ (East vs West), day of year $d$, and year $t$, $\text{Summer}_d$, $\text{East}_i$, and  $\text{Post}$ are defined as before, and $\epsilon_{idt}$ is an error term. The coefficient of interest, $\beta_7$, represents the difference in average total daily NOx emissions in the East vs West, summer vs winter, and before vs after the NBP went into effect. That is,
-\footnotesize
 \begin{align*}
-	\hat{\beta}_7 &= [(\bar{Y}_{\text{Summer}=1, \text{East} = 1, \text{Post} = 1} -  \bar{Y}_{\text{Summer}=1, \text{East} = 1, \text{Post} = 0}) - (\bar{Y}_{\text{Summer}=0, \text{East} = 1, \text{Post} = 1} - \bar{Y}_{\text{Summer}=0, \text{East} = 1, \text{Post} = 1}] \\
-	& \quad  - [(\bar{Y}_{\text{Summer}=1, \text{East} = 0, \text{Post} = 1} -  \bar{Y}_{\text{Summer}=1, \text{East} = 0, \text{Post} = 0}) - (\bar{Y}_{\text{Summer}=0, \text{East} = 0, \text{Post} = 1} - \bar{Y}_{\text{Summer}=0, \text{East} = 0, \text{Post} = 1}].
+	\hat{\beta}_7 &= [(\bar{Y}_{\text{Summer}, \text{East}, \text{Post}} -  \bar{Y}_{\text{Summer}, \text{East}, \text{Pre}}) - (\bar{Y}_{\text{Winter}, \text{East}, \text{Post}} - \bar{Y}_{\text{Winter}, \text{East}, \text{Pre}}] \\
+	& \quad  - [(\bar{Y}_{\text{Summer}, \text{West}, \text{Post}} -  \bar{Y}_{\text{Summer}, \text{West}, \text{Pre}}) - (\bar{Y}_{\text{Winter}, \text{West}, \text{Post}} - \bar{Y}_{\text{Winter}, \text{West}, \text{Pre}})].
 \end{align*}
-\normalsize
 
 \subsubsection*{Part b}
 Using the triple difference estimator, I estimate that the NBP reduced total daily summer NOx emissions by an average of 2911.723 tons (Column 3, Table \ref{table:CS_DiD}). This estimate is statistically significant at the 1\% level.
 
 \subsubsection*{Part c}
+I choose to not weight the regressions. I do this because we are interested in the effect of the NBP on average total daily emissions across units affected by the NBP. Although I do not cluster the standard errors, we could consider doing so if we are worried about serial or spatial autocorrelation. For instance, if we were running a state-level season regression rather than an east vs west daily regression, I could consider clustering at the state-season level.
 
 \section*{Problem 8}
+For the triple difference estimator in Problem 7, the NBP should affect Eastern states only: $D_{idt} = 1[i=\text{East}] \times 1[d \in \text{Summer}] \times 1[t=2005]$. This assumption might fail if there are spillover effects onto Western states (e.g., wind from the East to the West carrying fewer NOx emissions than usual), although the authors select the control states with this concern in mind. In the DDD estimator, we also allow for non-parallel trends between the East vs West, but require this non-parallelness to be the same during the summer vs winter. That is,
+\begin{align*}
+	\EX[\Delta Y_{\text{East, Summer}}(0) - \Delta Y_{\text{West, Summer}}(0)] = \EX[\Delta Y_{\text{East, Winter}}(0) - \Delta Y_{\text{West, Winter}}(0)]
+\end{align*}
+This assumption might fail if there are unobserved seasonal shocks to NBP states after the NBP went into effect (e.g., other regulatory changes that occur during the summer months in NBP states in 2005). 
+
+I believe the DDD estimator is the most reasonable approach to measuring the effects of this
+program. The polynomial RD in Problem 2 only uses one year of (post-period) data and, thus, cannot rule out the possibility that NOx emissions in NBP states typically fall during the summer months (specifically, around the cutoff dates) even before the program went into effect, in which case there would be no treatment effect. This specification also imposes a common quadratic time trend on either side of the cutoff dates, which may be a stronger assumption than we are comfortable making. Although the spline RD in Problem 3 allows for different quadratic trends on either side of the cutoff dates, it suffers from the first issue that afflicts the polynomial RD. 
+
+Both RD specifications are likely better identified than the cross-sectional specification in Problem 4 since they are comparing outcomes around 2-month windows of the program start/stop rather than across summer vs winter. The months on either side of the cutoff dates are likely more comparable than summer vs winter. However, the RD specifications only return the local average treatment effect (LATE) during these 2-month windows, whereas we are presumably interested in the average treatment effect on the treated (ATT) for the entire summer period when the NBP operates.
+
+Lastly, the parallel trends assumption in the DDD estimator is weaker than those in the DiD estimators, making it more likely to be satisfied in our setting. Specifically, the DiD estimator in Problem 5 requires parallel summer vs winter trends among NBP states before vs after the NBP began operating in 2005:
+\begin{align*}
+	\EX[Y_{\text{Summer, Post}}(0) - Y_{\text{Winter, Post}}(0)] = \EX[Y_{\text{Summer, Pre}}(0) - Y_{\text{Winter, Pre}}(0)],
+\end{align*}
+and the DiD estimator in Problem 6 requires parallel summer vs winter trends in 2005 in the East vs West:
+\begin{align*}
+	\EX[Y_{\text{Summer, East}}(0) - Y_{\text{Winter, East}}(0)] = \EX[Y_{\text{Summer, West}}(0) - Y_{\text{Winter, West}}(0)].
+\end{align*}
+
 
 \section*{Problem 9}
+My interpretation of this question is that, instead of running the above regressions to estimate the effects of the NBP program, we are proposing comparing pre-period measured emissions with post-period emissions as prescribed by the caps. If the caps were perfectly binding and we assumed that firms would want to emit as much pollution as they could, then this approach would tell us how much emissions fell during the summer when the NBP is in effect. However, since the NBP is not in effect during the winter, using the caps along will not tell us how emissions changed during that period of time. Moreover, since firms may emit beyond or below their allowances, the prescribed emissions caps will almost certainly not match the actual level of emissions once the NBP went into effect.
+
 
 \section*{Problem 10}
 The consumer’s problem is
@@ -278,23 +301,19 @@ with first-order conditions
 Recall that the marginal cost of the numeraire good, $X$ , is 1; the marginal cost of leisure, $f$, is $p_w$ (i.e., the hourly wage you give up by not working); and the marginal cost of defensive actions, $a$, is the direct cost, $p_a$, net of the saved costs from taking fewer sick days (i.e., the additional wages that can be earned from taking fewer sick days due to improved health) since $\partial s/\partial a < 0$. Moreover, recall that $\lambda$ is the ``shadow price,'' or the utility gain at the optimum of relaxing the budget constraint by one dollar. Therefore, each first-order condition says that the marginal utility of the good in question equals the shadow price times the marginal cost. In other words, the marginal utility of consuming one additional unit equals the marginal disutility of purchasing one additional unit.
 
 \section*{Problem 11}
-Assuming an interior solution as in the paper, we totally differentiate the health production function s = s(c, a) at the optimum $a^*$:
-\begin{align}
-	ds = \frac{\partial s}{\partial c} dc + \frac{\partial s}{\partial a} da^*.
-\end{align}
-Dividing through by $dc$, we get
-\begin{align}
-	\frac{ds}{dc} = \frac{\partial s}{\partial c} \frac{dc}{dc} + \frac{\partial s}{\partial a} \frac{da^*}{dc}.
-\end{align}
-Rearranging and simplifying, we get equation (2) from the paper:
+Given that the consumer chooses $a$ to maximize their utility, we can write their health production function as $s=s(c,a^*)$. Totally differentiating this with respect to $s$ yields
+\begin{align*}
+	\frac{ds}{dc} = \frac{\partial{s}}{{\partial c}} + \frac{\partial s}{\partial a} \frac{\partial a^*}{\partial c}
+\end{align*}
+Rearranging terms, we get 
 \begin{align} \label{eqn_dsdc}
-	\frac{\partial s}{\partial c} = \frac{ds}{dc} - \frac{\partial s}{\partial a} \frac{da^*}{dc}.
+	\frac{\partial s}{\partial c} = \frac{ds}{dc} - \frac{\partial s}{\partial a} \frac{\partial a^*}{\partial c}.
 \end{align}
 
 \section*{Problem 12}
 $\partial s/\partial c$ represents the partial effect of ambient pollution on health as measured by sick days, holding all else equal. $d s/ dc$ represents the total effect of ambient pollution concentration on health, which is the direct effect of pollution on health net of the mitigating effects of defensive behaviors.
 
- $\partial s / \partial c$ is difficult to estimate both in an experimental and non-experimental setting. In an experimental setting, we would need to randomly expose some people to higher ambient pollution concentrations without allowing them to take defensive actions. This is both practically infeasible and highly unethical. In the non-experimental case, we would need data on all defensive investments according to the second RHS term in equation (\ref{eqn_dsdc}), which is typically more difficult to obtain than pollution or health data. $ds / dc$ is comparatively easier to estimate because observed health outcomes are already net of defensive behaviors people engage in.
+ $\partial s / \partial c$ is difficult to estimate both in an experimental and non-experimental setting. In an experimental setting, we would need to randomly expose some people to higher ambient pollution concentrations without allowing them to take defensive actions, which is highly unethical. In the non-experimental case, we would need data on all defensive investments according to the second RHS term in equation (\ref{eqn_dsdc}), which is typically more difficult to obtain than pollution or health data. $ds / dc$ is comparatively easier to estimate because observed health outcomes are already net of defensive behaviors people engage in.
 
 
 \section*{Problem 13}
@@ -302,21 +321,21 @@ First, we can rearrange equation (\ref{eqn_dsdc}) as
 \begin{align*}
 	\frac{\partial s}{\partial a} = \frac{1}{\partial a^* / \partial c} \left[ \frac{d s}{d c} - \frac{\partial s}{\partial c} \right]
 \end{align*}
-Substituting this expression into equation (\ref{eqn:foc_a}), we get
+Substituting this expression for $\partial s/\partial a$ into equation (\ref{eqn:foc_a}), we get
 \begin{align*}
 	\frac{\partial u}{\partial s} \left( \frac{1}{\partial a^* / \partial c} \left[ \frac{d s}{d c} - \frac{\partial s}{\partial c} \right] \right) &= \lambda p_w \left( \frac{1}{\partial a^* / \partial c} \left[ \frac{d s}{d c} - \frac{\partial s}{\partial c} \right] \right)  + \lambda p_a
 \end{align*}
 Simplifying and rearranging yields
-\begin{align*}
-	& \frac{\partial u}{\partial s} \left[ \frac{d s}{d c} - \frac{\partial s}{\partial c} \right] = \lambda p_w \left[ \frac{d s}{d c} - \frac{\partial s}{\partial c} \right] + \lambda p_a \frac{\partial a^*}{\partial c} \\
-	\Leftrightarrow \; & \frac{\partial u}{\partial s} \frac{ds}{dc} - \frac{\partial u}{\partial s} \frac{\partial s}{\partial c} = \lambda p_w \frac{ds}{dc} - \lambda p_w \frac{\partial s}{\partial c} + \lambda p_a \frac{\partial a^*}{\partial c} \\
-	\Leftrightarrow \; & \lambda p_w \frac{\partial s}{\partial c} - \frac{\partial u}{\partial s}{\partial s}{\partial c} =  \lambda p_w \frac{ds}{dc} + \lambda p_a \frac{\partial a^*}{\partial c} - \frac{\partial u}{\partial s} \frac{ds}{dc} \\
-	\Leftrightarrow \; & p_w \frac{\partial s}{\partial c} - \frac{1}{\lambda} \frac{\partial u}{\partial s}{\partial s}{\partial c} =  \left(p_w \frac{ds}{dc} \right) + \left( p_a \frac{\partial a^*}{\partial c} \right) - \left( \frac{\partial u / \partial s}{\lambda} \frac{ds}{dc} \right) \\
+\begin{align}
+	& \frac{\partial u}{\partial s} \left[ \frac{d s}{d c} - \frac{\partial s}{\partial c} \right] = \lambda p_w \left[ \frac{d s}{d c} - \frac{\partial s}{\partial c} \right] + \lambda p_a \frac{\partial a^*}{\partial c} \nonumber \\
+	\Leftrightarrow \; & \frac{\partial u}{\partial s} \frac{ds}{dc} - \frac{\partial u}{\partial s} \frac{\partial s}{\partial c} = \lambda p_w \frac{ds}{dc} - \lambda p_w \frac{\partial s}{\partial c} + \lambda p_a \frac{\partial a^*}{\partial c} \nonumber \\
+	\Leftrightarrow \; & \lambda p_w \frac{\partial s}{\partial c} - \frac{\partial u}{\partial s}{\partial s}{\partial c} =  \lambda p_w \frac{ds}{dc} + \lambda p_a \frac{\partial a^*}{\partial c} - \frac{\partial u}{\partial s} \frac{ds}{dc} \nonumber \\
+	\Leftrightarrow \; & p_w \frac{\partial s}{\partial c} - \frac{1}{\lambda} \frac{\partial u}{\partial s}{\partial s}{\partial c} =  \left(p_w \frac{ds}{dc} \right) + \left( p_a \frac{\partial a^*}{\partial c} \right) - \left( \frac{\partial u / \partial s}{\lambda} \frac{ds}{dc} \right) \nonumber \nonumber \\
 	\Leftrightarrow \; & w_c =  \left(p_w \frac{ds}{dc} \right) + \left( p_a \frac{\partial a^*}{\partial c} \right) - \left( \frac{\partial u / \partial s}{\lambda} \frac{ds}{dc} \right).
-\end{align*}
+\end{align}
 
 \section*{Problem 14}
-In the model, $p_a$ represents the cost of all defensive behaviors taken against air pollution. It is worth noting that medications alone - which is what the paper uses to measure defensive investments - do not capture the full spectrum of potential defensive investments. Other defensive investments such as purchasing air filters and limiting time spent outdoors are also likely important components of defensive investments.
+In the model, $p_a$ represents the cost of all defensive behaviors taken against air pollution. It is worth noting that medications alone - which is what the paper uses to measure defensive investments - do not capture the full spectrum of potential defensive investments (e.g., purchasing air filters or limiting time spent outdoors). 
 
 %%%%%%%%%%%%%%%%%%%%%
 \clearpage
@@ -378,30 +397,30 @@ global dirpath_output "$dirpath_home\output"
 * Initialize settings and filepaths
 do "\\tsclient\Documents\github\ARE-261-Problem-Sets\Pset3\scripts\setup.do"
 
-* Append raw data
-local files: dir "$dirpath_data\raw" files "*.csv"
-local i = 1
-foreach file of local files {
-	import delimited using "$dirpath_data\raw\\`file'", clear
-	tempfile file`i'
-	save `file`i''
-	local i = `i' + 1
-}
-clear
-forval i = 1/4 {
-	append using `file`i''
-}
+* Load the raw data
+import delimited "$dirpath_data\raw\raw_emissions_data.csv", clear
 
 * Keep key variables
-keep state date nox* 
-rename noxmassshorttons nox_mass
-rename noxratelbsmmbtu nox_rate
+keep statecode facilityname facilityid unitid date noxmass
+rename statecode state
+rename facilityname facility_name
+rename facilityid facility_id
+rename unitid unit_id
+rename noxmass nox_mass
 
-* Create date variables
+* Check that the data are uniquely identified as expected
+gunique state facility_id unit_id date
+assert r(unique) == _N
+
+* Create stata date variables
 gen date_stata = date(date, "YMD")
 format date_stata %td
 gen year = year(date_stata)
 drop date
+
+* Conver the NOx mass variable to numeric
+replace nox_mass = "" if nox_mass == "NA"
+destring nox_mass, replace
 
 * Create NBP binary indicator = 1 for NBP states and 0 otherwise. Note that I 
 * exclude Missouri from the list because the NBP did not begin operating there
@@ -412,7 +431,8 @@ foreach stabv in AL CT DE DC IL IN KY MD MA MI NJ NY NC OH PA RI SC TN VA WV {
 }
 
 * Create indicator for eastern states, excluding states that were excluded in
-* the paper
+* the paper (including Missouri, since the NBP did not begin operating there 
+* until 2007). I use this indicator later when I run east vs west regressions
 gen east = nbp
 foreach stabv in WI IA MO GA MS ME NH VT AK HI {
 	qui replace east = . if state == "`stabv'"
@@ -501,7 +521,7 @@ gen runvar_minus_c2_sq = runvar_minus_c2^2
 forvalues i = 1/2 {
 	eststo: reghdfe nox_mass summer ///
 		runvar_minus_c`i' runvar_minus_c`i'_sq ///
-		if rdwindow_`i' == 1, noabs
+		if rdwindow_`i' == 1, noabs vce(robust)
 	if `i' == 1 {
 		estadd local cutoff "May 1"
 	}
@@ -530,7 +550,7 @@ cd "$dirpath_output\Tables"
 la var nox_mass "NOx"
 la var summer "1(NBP Operating)"
 
-local longnote "\emph{Notes}: The table dislpays estimates for the the effect of the NOx Budget Trading Program on average total daily NOx emissions. Columns 1--2 report the results using the polynomial regresion discontinuity, and Columns 3--4 report the results using the spline regression discontinuity. Columns 1 and 3 include the 30 days before and after May 1st in the sample, and Columns 2 and 4 include the 30 days before and after September 30th. Standard errors are in parentheses. * p<0.05, ** p<0.01, *** p<0.001"
+local longnote "\emph{Notes}: The table dislpays estimates for the the effect of the NOx Budget Trading Program on average total daily NOx emissions. Columns 1--2 report the results using the polynomial regresion discontinuity, and Columns 3--4 report the results using the spline regression discontinuity. Columns 1 and 3 include the 30 days before and after May 1st in the sample, and Columns 2 and 4 include the 30 days before and after September 30th. Robust errors are in parentheses. * p<0.05, ** p<0.01, *** p<0.001"
 
 esttab using "Table_RD_estimates.tex", replace ///
 	title("Polynomial and Spline RD estimates for the effect of the NBP on NOx emissions \label{tab1}") ///
@@ -555,7 +575,7 @@ gen month = month(date_stata)
 gen summer = inlist(month, 5, 6, 7, 8, 9)
 gcollapse (sum) nox_mass, by(date_stata summer)
 
-reghdfe nox_mass summer, noabs
+reghdfe nox_mass summer, noabs vce(robust)
 
 local var1 summer
 local b1 = _b[`var1']
@@ -571,7 +591,7 @@ gcollapse (sum) nox_mass, by(date_stata year summer)
 gen post = (year == 2005)
 gen summerXpost = summer * post
 
-reghdfe nox_mass summer post summerXpost, noabs
+reghdfe nox_mass summer post summerXpost, noabs vce(robust)
 
 local var2 summerXpost
 local b2 = _b[`var2']
@@ -587,7 +607,7 @@ gen summer = inlist(month, 5, 6, 7, 8, 9)
 gcollapse (sum) nox_mass, by(date_stata east summer)
 gen summerXeast = summer * east
 
-reghdfe nox_mass summer east summerXeast, noabs
+reghdfe nox_mass summer east summerXeast, noabs vce(robust)
 
 local var3 summerXeast
 local b3 = _b[`var3']
@@ -607,7 +627,7 @@ gen eastXpost = east*post
 gen summerXeastXpost = summer*east*post 
 
 reghdfe nox_mass summer post east summerXeast summerXpost ///
-	eastXpost summerXeastXpost, noabs
+	eastXpost summerXeastXpost, noabs vce(robust)
 	
 local var4 summerXeastXpost
 local b4 = _b[`var4']
@@ -682,7 +702,7 @@ file write myfile "\\" _n
 * End table
 file write myfile "\bottomrule" _n
 file write myfile "\end{tabular}" _n
-file write myfile "\caption*{\footnotesize \emph{Notes:} The table dislpays estimates for the the effect of the NOx Budget Trading Program on average total daily NOx emissions. Columns 1 reports the estimated coefficient of interest from the cross-sectional specification in Question 4. Column 2 the estimated coefficient of interest from the Pre vs Post DiD in Question 5. Column 3 reports the estimated coefficient of interest from the East vs West DiD in Question 6. Finally, Column 4 reports the estimated coefficient of interest from the triple-difference specification in Question 7. Standard errors are in parentheses. * p<0.05, ** p<0.01, *** p<0.001}" _n
+file write myfile "\caption*{\footnotesize \emph{Notes:} The table dislpays estimates for the the effect of the NOx Budget Trading Program on average total daily NOx emissions. Columns 1 reports the estimated coefficient of interest from the cross-sectional specification in Question 4. Column 2 the estimated coefficient of interest from the Pre vs Post DiD in Question 5. Column 3 reports the estimated coefficient of interest from the East vs West DiD in Question 6. Finally, Column 4 reports the estimated coefficient of interest from the triple-difference specification in Question 7. Robust errors are in parentheses. * p<0.05, ** p<0.01, *** p<0.001}" _n
 file write myfile "\label{table:CS_DiD}" _n
 file write myfile "\end{table}" _n
 if `own_file' == 1 {

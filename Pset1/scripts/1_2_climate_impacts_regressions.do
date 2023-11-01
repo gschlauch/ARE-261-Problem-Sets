@@ -30,6 +30,7 @@ gen controls = "No"
 gen weights = "No"
 export delimited "$dirpath_data\intermediate\reg_climate_impacts_2.csv", replace
 restore
+mfxrcspline
 
 * 3
 local temp_bins "tempB0 temp0to4 temp4to8 temp8to12 temp12to16 temp16to20 o.temp20to24 temp24to28 temp28to32 tempA32"
